@@ -1,440 +1,2760 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Events Agent - UI/UX by Autonomy Level</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emma Events Agent — Interaction Patterns</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --primary: #263C91;
+  --primary-50: #eef1fa;
+  --primary-100: #d4daf2;
+  --primary-200: #a9b5e5;
+  --primary-700: #1a2a66;
+  --primary-800: #111d4a;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --emerald-50: #ecfdf5;
+  --emerald-100: #d1fae5;
+  --emerald-500: #10b981;
+  --emerald-600: #059669;
+  --emerald-700: #047857;
+  --amber-50: #fffbeb;
+  --amber-100: #fef3c7;
+  --amber-500: #f59e0b;
+  --amber-600: #d97706;
+  --amber-700: #b45309;
+  --red-50: #fef2f2;
+  --red-100: #fee2e2;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  --blue-50: #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --purple-50: #faf5ff;
+  --purple-100: #f3e8ff;
+  --purple-500: #a855f7;
+  --purple-600: #9333ea;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+
+  /* Agent colours (from Lookbook DS) */
+  --agent-events: #3478f7;
+  --agent-events-light: #dfebfe;
+  --agent-enrolment: #ffa940;
+  --agent-enrolment-light: #fff7e6;
+  --agent-leads: #73d13d;
+  --agent-leads-light: #f6ffed;
+  --agent-meetings: #9160e2;
+  --agent-meetings-light: #f9f7fe;
+  --agent-insights: #263c91;
+  --agent-insights-light: #d4dff9;
+
+  /* Autonomy level colours */
+  --level-l1-bg: #dfebfe;
+  --level-l1-border: #c7dcfc;
+  --level-l1-text: #0948cf;
+  --level-l1-color: #3478f7;
+  --level-l2-bg: #fff7e6;
+  --level-l2-border: #ffe7ba;
+  --level-l2-text: #d46b08;
+  --level-l2-color: #ffa940;
+  --level-l3-bg: #f6ffed;
+  --level-l3-border: #d9f7be;
+  --level-l3-text: #389e0d;
+  --level-l3-color: #73d13d;
+  --level-l4-bg: #f9f7fe;
+  --level-l4-border: #e9e1fa;
+  --level-l4-text: #6925cb;
+  --level-l4-color: #9160e2;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: Arial, sans-serif;
+  background: var(--gray-100);
+  color: var(--gray-800);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── TOP BAR ── */
+.top-bar {
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  height: 52px;
+  flex-shrink: 0;
+  gap: 16px;
+}
+.top-bar .logo {
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.top-bar .logo .ava-icon {
+  width: 28px;
+  height: 28px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+.top-bar .separator {
+  width: 1px;
+  height: 24px;
+  background: rgba(255,255,255,0.2);
+}
+
+
+/* ── MAIN LAYOUT ── */
+.main-layout {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ── CHAT PANEL ── */
+.chat-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-right: 1px solid var(--gray-200);
+  min-width: 0;
+}
+.chat-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.chat-header h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.chat-messages::-webkit-scrollbar { width: 5px; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+
+/* Message bubbles */
+.msg { display: flex; gap: 10px; max-width: 85%; animation: msgIn 0.3s ease; }
+.msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.msg-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.msg.ava .msg-avatar { background: var(--agent-events); color: white; border-radius: 50%; }
+.msg.user .msg-avatar { background: var(--emerald-100); color: var(--emerald-700); }
+.msg-body {
+  padding: 10px 14px;
+  border-radius: var(--radius-lg);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--gray-700);
+}
+.msg.ava .msg-body {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+}
+.msg.user .msg-body {
+  background: var(--primary);
+  color: white;
+  border-radius: 16px;
+  border-bottom-right-radius: 4px;
+}
+.msg-body strong { font-weight: 600; }
+.msg-body p + p { margin-top: 8px; }
+
+/* ── MESSAGE ACTIONS ── */
+.msg-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.msg.ava:hover .msg-actions,
+.msg-actions.visible { opacity: 1; }
+.msg-action-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--gray-200);
+  background: white;
+  color: var(--gray-400);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: all 0.15s;
+}
+.msg-action-btn:hover { color: var(--gray-700); background: var(--gray-50); border-color: var(--gray-300); }
+.msg-action-btn.active { color: var(--agent-events); border-color: var(--agent-events); background: var(--agent-events-light, #dfebfe); }
+
+
+/* ── CHAT INPUT ── */
+.chat-input-area {
+  padding: 14px 20px;
+  border-top: 1px solid var(--gray-200);
+  flex-shrink: 0;
+}
+.chat-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.chat-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.chat-input:focus { border-color: var(--primary); }
+.chat-input::placeholder { color: var(--gray-400); }
+.restart-btn {
+  padding: 10px 12px;
+  background: var(--gray-100);
+  color: var(--gray-600);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.restart-btn:hover { background: var(--gray-200); }
+
+/* ── SEND BUTTON ── */
+.send-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #263c91;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.send-btn:hover { background: var(--primary-700); }
+.send-btn:disabled { opacity: 0.3; cursor: default; }
+
+/* ── SUGGESTION PILLS ── */
+.suggestion-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 0 10px 0;
+}
+.suggestion-pills:empty { display: none; padding: 0; }
+.suggestion-pill {
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--gray-200);
+  background: white;
+  color: var(--gray-700);
+  font-family: Arial, sans-serif;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.suggestion-pill:hover { border-color: #263c91; color: #263c91; background: #eef1fa; }
+.suggestion-pill .pill-icon { font-size: 11px; color: #263c91; }
+
+/* ── SUGGESTION CHIPS ── */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.chip.default { background: #eef1fa; color: var(--primary); border: 1px solid var(--primary-100); }
+.chip.selected { background: var(--primary); color: white; border-color: var(--primary); font-weight: 600; }
+.chip.dimmed { background: #eef1fa; color: #263c91; opacity: 0.4; pointer-events: none; }
+.chip.other { background: transparent; color: var(--gray-500); border: 1px dashed var(--gray-300); }
+.chip.other.dimmed { opacity: 0.4; pointer-events: none; }
+.chip.other.active { background: #263c91; color: white; border-color: #263c91; font-weight: 600; }
+.chip.default:hover { background: #d4daf2; color: #263c91; }
+.chip.other:hover { border-color: #263c91; color: #263c91; }
+.chip-input-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.chip-input {
+  flex: 1;
+  padding: 6px 12px;
+  border: 1.5px solid #263c91;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  color: var(--gray-700);
+  outline: none;
+  background: white;
+  box-shadow: 0 0 0 2px rgba(37,58,106,0.1);
+}
+.chip-submit {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  background: #263c91;
+  color: white;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+/* ── FOLLOW-UP INPUTS (date/time pickers) ── */
+.followup-input-area {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+.followup-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+.followup-field.time { flex: 0.7; }
+.followup-field label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.followup-field input {
+  padding: 8px 12px;
+  border: 1.5px solid #263c91;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  color: var(--gray-800);
+  background: white;
+  box-shadow: 0 0 0 2px rgba(37,58,106,0.08);
+  outline: none;
+}
+.followup-field input:focus {
+  box-shadow: 0 0 0 3px rgba(37,58,106,0.15);
+}
+.followup-submit {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #263c91;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.followup-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  align-items: flex-end;
+}
+
+/* ── CONFIRMATION CARD ── */
+.confirm-card {
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 420px;
+  flex-shrink: 0;
+  animation: planIn 0.4s ease;
+}
+.confirm-card.done { border: 1px solid var(--level-l3-border); border-left: 4px solid var(--level-l3-color); }
+.confirm-card.review { border: 1px solid var(--level-l2-border); border-left: 4px solid var(--level-l2-color); }
+.confirm-card-header {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.confirm-card.done .confirm-card-header { background: var(--level-l3-bg); border-bottom: 1px solid var(--level-l3-border); }
+.confirm-card.review .confirm-card-header { background: var(--level-l2-bg); border-bottom: 1px solid var(--level-l2-border); }
+.confirm-card-header .card-icon { font-size: 14px; }
+.confirm-card-header h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gray-800);
+}
+.confirm-card-body { padding: 0; }
+.confirm-card-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--gray-100);
+}
+.confirm-card-row:last-child { border-bottom: none; }
+.confirm-card-row .label { color: var(--gray-500); }
+.confirm-card-row .value { color: var(--gray-800); font-weight: 600; text-align: right; max-width: 60%; }
+.confirm-card-warning {
+  padding: 8px 16px;
+  font-size: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.confirm-card.done .confirm-card-warning { background: var(--level-l3-bg); border-top: 1px solid var(--level-l3-border); color: var(--level-l3-text); }
+.confirm-card.review .confirm-card-warning { background: var(--level-l2-bg); border-top: 1px solid var(--level-l2-border); color: var(--level-l2-text); }
+.confirm-card-actions {
+  padding: 8px 16px;
+  border-top: 1px solid var(--gray-200);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.card-btn {
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  border: none;
+  transition: all 0.15s;
+}
+.card-btn.cancel { background: white; color: var(--gray-700); border: 1px solid var(--gray-200); }
+.card-btn.confirm { background: var(--level-l3-color); color: white; }
+.card-btn.publish { background: var(--level-l2-color); color: white; }
+.card-btn.send { background: var(--level-l2-color); color: white; }
+.card-btn.working {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* ── EMAIL DRAFT CARD ── */
+.email-body-preview {
+  margin-top: 10px;
+  padding: 12px;
+  background: var(--gray-50);
+  border-radius: 6px;
+  border: 1px solid var(--gray-200);
+  font-size: 12px;
+  color: var(--gray-700);
+  line-height: 1.6;
+}
+
+/* ── TIME DIVIDER ── */
+.time-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+.time-divider .line { flex: 1; height: 1px; background: var(--gray-200); }
+.time-divider .label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* ── ALERT NOTIFICATIONS ── */
+.alert-card {
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 95%;
+  flex-shrink: 0;
+  padding: 12px 16px;
+  animation: msgIn 0.3s ease;
+}
+.alert-card.insight { border: 1px solid var(--level-l1-border); border-left: 4px solid var(--level-l1-color); background: var(--level-l1-bg); }
+.alert-card.review { border: 1px solid var(--level-l2-border); border-left: 4px solid var(--level-l2-color); background: var(--level-l2-bg); }
+.alert-card.done { border: 1px solid var(--level-l3-border); border-left: 4px solid var(--level-l3-color); background: var(--level-l3-bg); }
+.alert-card.auto { border: 1px solid var(--level-l4-border); border-left: 4px solid var(--level-l4-color); background: var(--level-l4-bg); }
+.alert-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.alert-title h4 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-800);
+}
+.alert-text { font-size: 13px; color: var(--gray-700); line-height: 1.5; margin-bottom: 10px; }
+.alert-why {
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.alert-card.insight .alert-why { background: var(--level-l1-border); border: 1px solid var(--level-l1-border); color: var(--level-l1-text); }
+.alert-card.review .alert-why { background: var(--level-l2-border); border: 1px solid var(--level-l2-border); color: var(--level-l2-text); }
+.alert-card.done .alert-why { background: var(--level-l3-border); border: 1px solid var(--level-l3-border); color: var(--level-l3-text); }
+.alert-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.alert-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  background: white;
+  transition: all 0.15s;
+}
+.alert-card.insight .alert-btn { border: 1px solid var(--level-l1-border); color: var(--level-l1-text); }
+.alert-card.review .alert-btn { border: 1px solid var(--level-l2-border); color: var(--level-l2-text); }
+.alert-card.review .alert-btn.primary { background: var(--level-l2-color); color: white; border: none; font-weight: 600; }
+.alert-card.done .alert-btn { border: 1px solid var(--level-l3-border); color: var(--level-l3-text); }
+.alert-btn.dismiss { border: 1px solid var(--gray-200); color: var(--gray-500); }
+
+/* ── PROGRESS BLOCK ── */
+.progress-block {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 12px 16px;
+  max-width: 95%;
+  flex-shrink: 0;
+  animation: msgIn 0.3s ease;
+}
+.progress-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+}
+.progress-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+}
+.progress-dot.done { background: #22c55e; color: white; }
+.progress-dot.active { background: white; border: 2px solid #263c91; }
+.progress-step .step-text { font-size: 12px; color: var(--gray-500); }
+.progress-step .step-result { font-size: 12px; color: var(--gray-700); font-weight: 500; }
+
+/* ── ACTIVITY FEED PANEL ── */
+.feed-panel {
+  width: 360px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--gray-50);
+}
+.feed-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--gray-200);
+  background: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.feed-header h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+.feed-header .feed-count {
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--gray-200);
+  color: var(--gray-600);
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+.feed-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+}
+.feed-content::-webkit-scrollbar { width: 5px; }
+.feed-content::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+.feed-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--gray-400);
+}
+.feed-empty i { font-size: 28px; margin-bottom: 10px; display: block; }
+.feed-empty p { font-size: 12px; }
+
+/* ── PROGRESS CHECKLIST ── */
+.progress-checklist {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+.progress-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 10px;
+}
+.phase-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 12px;
+}
+.phase-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 9px;
+}
+.phase-dot.done { background: #22c55e; color: white; }
+.phase-dot.active { background: var(--agent-events); color: white; animation: pulse 2s infinite; }
+.phase-dot.upcoming { background: #e5e7eb; }
+.phase-label.done { color: var(--gray-500); text-decoration: line-through; text-decoration-color: var(--gray-300); }
+.phase-label.active { color: var(--agent-events); font-weight: 600; }
+.phase-label.upcoming { color: var(--gray-400); }
+
+.feed-item {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  animation: taskIn 0.4s ease;
+}
+.feed-item.insight { border-left: 3px solid var(--level-l1-color); }
+.feed-item.review { border-left: 3px solid var(--level-l2-color); }
+.feed-item.done { border-left: 3px solid var(--level-l3-color); }
+.feed-item.auto { border-left: 3px solid var(--level-l4-color); }
+.feed-item-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.feed-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+.feed-tag.insight { background: var(--level-l1-bg); color: var(--level-l1-text); }
+.feed-tag.review { background: var(--level-l2-bg); color: var(--level-l2-text); }
+.feed-tag.done { background: var(--level-l3-bg); color: var(--level-l3-text); }
+.feed-tag.auto { background: var(--level-l4-bg); color: var(--level-l4-text); }
+.feed-item-title { font-size: 12px; font-weight: 600; color: var(--gray-800); }
+.feed-item-status { margin-left: auto; font-size: 10px; color: #22c55e; font-weight: 600; }
+.feed-item-desc { font-size: 11px; color: var(--gray-500); }
+
+/* ── THINKING INDICATOR ── */
+.thinking-block {
+  max-width: 85%;
+  animation: msgIn 0.3s ease;
+  flex-shrink: 0;
+}
+.thinking-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 12px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  user-select: none;
+}
+.thinking-header .thinking-icon {
+  width: 24px;
+  height: 24px;
+  background: var(--agent-events);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+}
+.thinking-header .thinking-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-600);
+}
+.thinking-dots {
+  display: flex;
+  gap: 3px;
+  margin-left: 4px;
+}
+.thinking-dots span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gray-400);
+  animation: typingBounce 1.2s infinite;
+}
+.thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+.thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+.thinking-chevron {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--gray-400);
+  transition: transform 0.2s;
+}
+.thinking-block.collapsed .thinking-chevron {
+  transform: rotate(-90deg);
+}
+.thinking-block.collapsed .thinking-steps {
+  display: none;
+}
+.thinking-steps {
+  padding: 8px 12px 8px 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.thinking-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--gray-500);
+  animation: msgIn 0.3s ease;
+}
+.thinking-step i {
+  width: 16px;
+  text-align: center;
+  font-size: 10px;
+  color: var(--primary-200);
+}
+.thinking-step.active i {
+  color: var(--primary);
+}
+.thinking-step.done i {
+  color: var(--emerald-500);
+}
+.thinking-block.done .thinking-dots { display: none; }
+.thinking-block.done .thinking-label::after {
+  content: ' \2713';
+  color: var(--emerald-500);
+}
+
+
+/* ── TYPING INDICATOR ── */
+.typing-indicator {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  max-width: 85%;
+}
+.typing-dots {
+  padding: 12px 16px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+  display: flex;
+  gap: 4px;
+}
+.typing-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--agent-events);
+  animation: typingBounce 1.5s infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+
+/* ── FILTER DISPLAY ── */
+.filter-display {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  margin-top: 8px;
+}
+.filter-display code {
+  background: var(--gray-100);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--primary);
+}
+
+/* ── PROCESS STEPS ── */
+.process-steps { margin-top: 10px; }
+.process-step {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 8px 0;
+}
+.step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--primary-100);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.step-text { font-size: 12px; color: var(--gray-600); line-height: 1.5; }
+
+/* ── ANIMATIONS ── */
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes planIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes taskIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes typingBounce {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ── SCROLLBAR ── */
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .feed-panel { display: none; }
+}
+</style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-                <div class="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-robot text-white"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-semibold text-gray-900">Events Agent</h1>
-                    <p class="text-sm text-gray-500">UI/UX by Autonomy Level</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-4">
-                <span class="text-sm text-gray-500">Reference Guide</span>
-                <div class="flex space-x-2">
-                    <span class="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">L1</span>
-                    <span class="px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700">L2</span>
-                    <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">L3</span>
-                    <span class="px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700">L4</span>
-                </div>
-            </div>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="logo">
+    <div class="ava-icon"><i class="fa-solid fa-bolt"></i></div>
+    Emma · Events Agent
+  </div>
+  <div class="separator"></div>
+  <span style="font-size:12px;opacity:0.7;">Interaction Patterns Prototype</span>
+  <div style="margin-left:auto;display:flex;background:rgba(255,255,255,0.12);border-radius:6px;padding:3px;">
+    <div style="padding:4px 14px;border-radius:4px;font-size:12px;font-weight:600;background:rgba(255,255,255,0.2);color:white;cursor:default;">Single Agent</div>
+    <div style="padding:4px 14px;border-radius:4px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.5);cursor:pointer;" onclick="window.location.href='ava-events-multi-agent.html'">Multi Agent</div>
+  </div>
+</div>
+
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+  <!-- CHAT PANEL -->
+  <div class="chat-panel">
+    <div class="chat-header">
+      <h2 id="chatTitle">Chat with Emma</h2>
+      <select id="scenarioSelect" onchange="loadScenario(this.selectedIndex)" style="padding:4px 8px;border:1px solid var(--gray-200);border-radius:6px;font-size:12px;font-family:Arial,sans-serif;color:var(--gray-600);background:white;cursor:pointer;">
+      </select>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-area">
+      <div class="suggestion-pills" id="suggestionPills"></div>
+      <div class="chat-input-row">
+        <button class="restart-btn" onclick="restartScenario()" title="Restart"><i class="fa-solid fa-rotate-left"></i></button>
+        <input class="chat-input" id="chatInput" placeholder="Ask Emma anything..." disabled>
+        <button class="send-btn" id="sendBtn" onclick="submitInput()" disabled title="Send">
+          <i class="fa-solid fa-arrow-up"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIVITY FEED PANEL -->
+  <div class="feed-panel">
+    <div class="feed-header">
+      <i class="fa-solid fa-list-check" style="font-size:13px;color:var(--gray-400);"></i>
+      <h2>Activity Feed</h2>
+      <span class="feed-count" id="feedCount">0</span>
+    </div>
+    <div class="feed-content" id="feedContent">
+      <div class="progress-checklist" id="progressChecklist" style="display:none;"></div>
+      <div class="feed-empty" id="feedEmpty">
+        <i class="fa-regular fa-rectangle-list"></i>
+        <p>Activity will appear here as Emma takes actions</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  SCENARIO DATA
+// ═══════════════════════════════════════════════════
+
+const scenarios = [
+  {
+    id: 1,
+    title: "Create Year 7 Open Evening",
+    shortTitle: "Create Event",
+    chatTitle: "New Event Setup",
+    phases: [
+      { label: "Gathering details",      startsAt: 0 },
+      { label: "Setting up event",       startsAt: 11 },
+      { label: "Post-event monitoring",  startsAt: 24 }
+    ],
+    steps: [
+
+      // ── Event type ──
+      {
+        type: "chips",
+        text: "What type of event would you like to create?",
+        items: [
+          { text: "Open Day",      response: "Open Day" },
+          { text: "Open Evening",  response: "Open Evening" },
+          { text: "Interview",     response: "Interview" },
+          { text: "Private Visit", response: "Private Visit" },
+          { text: "Show more options", response: "Show more options" }
+        ],
+        showOther: true,
+        response: "Open Evening"
+      },
+
+      // ── Event name ──
+      {
+        type: "chips",
+        text: "What would you like to call this Open Evening?",
+        items: [
+          { text: "Year 7 Open Evening",  response: "Year 7 Open Evening" },
+          { text: "Open Evening 2026",    response: "Open Evening 2026" },
+          { text: "Post-16 Open Evening", response: "Post-16 Open Evening" }
+        ],
+        showOther: true,
+        response: "Year 7 Open Evening"
+      },
+
+      // ── Application Form ──
+      {
+        type: "chips",
+        text: "Which application form should this event be linked to?\n\nI'm suggesting Year 7 (2027/2028) because that's the next upcoming intake and you mentioned Year 7.",
+        items: [
+          { text: "Year 7 (2027/2028)", response: "Year 7 (2027/2028)" },
+          { text: "Year 7 (2028/2029)", response: "Year 7 (2028/2029)" }
+        ],
+        showOther: true,
+        response: "Year 7 (2027/2028)"
+      },
+
+      // ── Date ──
+      {
+        type: "chips",
+        text: "When is the Year 7 Open Evening?",
+        items: [
+          { text: "Next Saturday", response: "Next Saturday" },
+          { text: "In 2 weeks",    response: "In 2 weeks" },
+          { text: "Next month",    response: "Next month",
+            followUp: {
+              text: "Which date next month?",
+              inputType: "date",
+              prefill: "2026-11-15"
+            }
+          }
+        ],
+        showOther: true,
+        otherType: "date",
+        otherPrefill: "2026-10-15",
+        response: "October 15th"
+      },
+
+      // ── Time ──
+      {
+        type: "chips",
+        text: "What time does it run?",
+        items: [
+          { text: "9:00am – 12:00pm",  response: "9:00am – 12:00pm" },
+          { text: "6:00pm – 8:00pm",   response: "6:00pm – 8:00pm" },
+          { text: "10:00am – 12:00pm", response: "10:00am – 12:00pm" }
+        ],
+        showOther: true,
+        otherType: "time",
+        otherPrefill: { start: "18:00", end: "20:00" },
+        response: "6:00pm – 8:00pm"
+      },
+
+      // ── Capacity ──
+      {
+        type: "chips",
+        text: "How many attendees can you accommodate?",
+        items: [
+          { text: "No limit", response: "No limit" },
+          { text: "50",       response: "50" },
+          { text: "100",      response: "100" },
+          { text: "200",      response: "200" }
+        ],
+        showOther: true,
+        response: "200"
+      },
+
+      // ── Waitlist ──
+      {
+        type: "chips",
+        text: "Would you like to enable a waitlist so families can still register once all 200 places are taken?",
+        items: [
+          { text: "Yes, enable waitlist", response: "Yes, enable waitlist" },
+          { text: "No waitlist needed",   response: "No waitlist needed" }
+        ],
+        showOther: true,
+        response: "Yes, enable waitlist"
+      },
+
+      // ── Self-registration ──
+      {
+        type: "chips",
+        text: "Should parents be able to register themselves through a link on your website?",
+        items: [
+          { text: "Yes, self-registration",         response: "Yes, self-registration" },
+          { text: "No, internal registration only", response: "No, internal registration only" }
+        ],
+        showOther: true,
+        response: "Yes, self-registration"
+      },
+
+      // ── ApplicaaOne ──
+      {
+        type: "chips",
+        text: "Would you like to publish this event to ApplicaaOne for wider reach?",
+        items: [
+          { text: "Yes, publish to ApplicaaOne", response: "Yes, publish to ApplicaaOne" },
+          { text: "No, website only", response: "No, website only" }
+        ],
+        showOther: false,
+        response: "No, website only"
+      },
+
+      // ── Registration questions ──
+      {
+        type: "chips",
+        text: "I'll use the standard registration questions — child's name, date of birth, year group, and contact details. Would you like to add or change any fields?",
+        items: [
+          { text: "Use standard questions", response: "Use standard questions" },
+          { text: "Add custom questions",   response: "Add custom questions" },
+          { text: "Show me the fields first", response: "Show me the fields first" }
+        ],
+        showOther: true,
+        response: "Use standard questions"
+      },
+
+      // ── Pre-confirm summary ──
+      {
+        type: "ava",
+        text: "That's everything I need. I'll create a draft Year 7 Open Evening for October 15th, 6–8pm with 200 capacity, waitlist enabled, and self-registration turned on."
+      },
+
+      // ── L3 Confirmation card ──
+      {
+        type: "confirm",
+        title: "Create New Event",
+        icon: "📅",
+        rows: [
+          { label: "Application Form",  value: "Year 7 (2027/2028)" },
+          { label: "Event Type",        value: "Open Evening" },
+          { label: "Name",              value: "Year 7 Open Evening" },
+          { label: "Date",              value: "15 October 2026" },
+          { label: "Time",              value: "18:00 – 20:00" },
+          { label: "Max Seats",         value: "200" },
+          { label: "Waitlist",          value: "Enabled" },
+          { label: "Self-Registration", value: "Yes" },
+          { label: "Status",            value: "Draft" }
+        ],
+        feed: { level: "done", title: "Year 7 Open Evening", desc: "Draft event created — 15 Oct 2026, 18:00–20:00, 200 seats" }
+      },
+
+      // ── User confirms ──
+      { type: "user", text: "✓ Confirmed" },
+
+      // ── Progress: creating event ──
+      {
+        type: "progress",
+        steps: [
+          { text: "Creating event..." },
+          { result: "Event created" }
+        ]
+      },
+
+      // ── Confirmation Email Preview ──
+      { type: "ava", text: "I've set up a confirmation email that families will receive when they register:" },
+      { type: "ava-html", html: '<div style="font-size:13px;color:#374151;line-height:1.5;border:1px solid #e5e7eb;border-radius:8px;padding:14px 16px;background:#f9fafb;"><p style="margin-bottom:4px;"><strong>Subject:</strong> You\'re registered for Year 7 Open Evening</p><p style="margin-bottom:8px;color:#6b7280;font-size:12px;">To: [Parent email]</p><div style="border-top:1px solid #e5e7eb;padding-top:10px;font-size:12px;color:#374151;line-height:1.6;">Dear [Parent Name],<br><br>Thank you for registering for our Year 7 Open Evening on Wednesday 15 October, 6:00pm – 8:00pm.<br><br>Please arrive at the main reception from 5:45pm. We look forward to welcoming you.<br><br>[School Name] Admissions Team</div></div>' },
+      {
+        type: "chips",
+        text: "Does this confirmation email look right?",
+        items: [
+          { text: "Looks good", response: "Looks good" },
+          { text: "Edit the email", response: "Edit the email" },
+          { text: "Skip email for now", response: "Skip email for now" }
+        ],
+        showOther: false,
+        response: "Looks good"
+      },
+
+      // ── Post-create agent message ──
+      {
+        type: "ava",
+        text: "I created your Year 7 Open Evening as a draft. It's ready when you are.\n\n<strong>Registration link:</strong> https://apply.school.com/events/year-7-open-evening-2026\n\nThe event is in draft — parents can't see it yet. Would you like to publish it now or make changes first?"
+      },
+
+      // ── Draft actions ──
+      {
+        type: "chips",
+        text: "What would you like to do next?",
+        items: [
+          { text: "Publish now",         response: "Publish now" },
+          { text: "Add custom questions", response: "Add custom questions" },
+          { text: "Edit details",        response: "Edit details" },
+          { text: "Keep as draft",       response: "Keep as draft" }
+        ],
+        showOther: true,
+        response: "Publish now"
+      },
+
+      // ── L2 Publish gate ──
+      {
+        type: "ava",
+        text: "Publishing will make this event visible to all eligible parents on your admissions portal and registration page. Once live, families can register immediately."
+      },
+      {
+        type: "gate",
+        title: "Publish Event",
+        icon: "🌐",
+        rows: [
+          { label: "Event",        value: "Year 7 Open Evening" },
+          { label: "Visible to",   value: "All Year 7 families" },
+          { label: "Registration", value: "Open immediately" }
+        ],
+        warning: "Once published, parents can see and register for this event.",
+        buttonText: "Publish",
+        feed: { level: "review", title: "Publish Year 7 Open Evening", desc: "Awaiting approval to make event live" }
+      },
+
+      // ── User publishes ──
+      { type: "user", text: "✓ Published" },
+
+      // ── Post-publish confirmation ──
+      {
+        type: "ava",
+        text: "Your Year 7 Open Evening is now live. Parents can see it on the portal and register using the link. You'll be notified as registrations come in.",
+        feed: { level: "done", title: "Year 7 Open Evening — Live", desc: "Event published. Registration open to all Year 7 families." }
+      },
+
+      // ── Post-publish chips ──
+      {
+        type: "chips",
+        text: "What would you like to do next?",
+        items: [
+          { text: "View public page",        response: "View public page" },
+          { text: "Share registration link", response: "Share registration link" },
+          { text: "Set up reminder email",   response: "Set up reminder email" }
+        ],
+        showOther: true,
+        response: "View public page"
+      },
+
+      // ── 3 weeks before ──
+      { type: "time-divider", label: "3 weeks before event" },
+
+      // ── L1 Insight alert ──
+      {
+        type: "alert",
+        level: "insight",
+        title: "Registration update: Year 7 Open Evening",
+        text: "I noticed your Open Evening is at 33% capacity with 21 days to go. At this point last year, the equivalent event had 110 registrations. Registration pace is running 41% behind.",
+        why: "Event date is approaching and registrations are below the rate seen in comparable previous events.",
+        actions: ["Draft promotional email", "View registration breakdown", "Dismiss"],
+        feed: { level: "insight", title: "Registration pace below target", desc: "33% capacity at 3 weeks — 41% behind last year's pace" }
+      },
+
+      // ── 48 hours before ──
+      { type: "time-divider", label: "48 hours before event" },
+
+      // ── L2 Review alert ──
+      {
+        type: "alert",
+        level: "review",
+        title: "Pre-event reminder ready: Year 7 Open Evening",
+        text: "I've prepared a reminder email for 187 registered families with the event time, location, and parking details.",
+        why: "Standard practice to send reminders 48 hours before an event. Reduces no-show rate by approximately 15% based on previous events.",
+        actions: ["Review draft", "Send now", "Skip"],
+        primaryAction: "Send now",
+        feed: { level: "review", title: "Pre-event reminder awaiting review", desc: "187 families — ready to send 48hrs before event" }
+      },
+
+      // ── User clicks "Review draft" ──
+      { type: "user", text: "Review draft" },
+
+      // ── L2 Email draft ──
+      {
+        type: "email-draft",
+        title: "Send Reminder Email",
+        to: "187 registered families",
+        subject: "Reminder: Year 7 Open Evening – Thursday 15 October",
+        body: "Dear [Parent Name],\n\nThis is a reminder that you are registered for our Year 7 Open Evening on Thursday 15 October, 6:00pm – 8:00pm.\n\nPlease arrive at the main reception from 5:45pm. Parking is available in the visitor car park.\n\nWe look forward to welcoming you.\n\n[School Name] Admissions Team",
+        warning: "This will send 187 emails to families.",
+        feed: { level: "review", title: "Reminder email draft", desc: "187 families · Subject: Reminder: Year 7 Open Evening – Thursday 15 October" }
+      },
+
+      // ── L4 Auto alert ──
+      {
+        type: "alert",
+        level: "auto",
+        title: "Sent 12 registration confirmations today",
+        text: "Handled: 12 registration confirmations sent using the approved template. Total registered: 178 of 200.",
+        feed: { level: "auto", title: "12 registration confirmations sent", desc: "Total registered: 178 of 200" }
+      }
+
+    ]
+  },
+
+  // ── Scenario 2 ──────────────────────────────────
+  {
+    id: 2,
+    title: "Three Weekly Tour Dates",
+    shortTitle: "Tour Dates",
+    chatTitle: "Open Morning Tours",
+    phases: [
+      { label: "Processing request",  startsAt: 0 },
+      { label: "Creating sessions",   startsAt: 4 },
+      { label: "Post-tour follow-up", startsAt: 15 }
+    ],
+    steps: [
+      { type: "user", text: "Set up three Open Morning tours running weekly on the first Tuesday of November, December, and January. Each tour is 9:30-11am, max 15 families per tour. Head's PA should be notified of every new registration." },
+      { type: "progress", steps: [
+        { text: "Calculating first Tuesday dates..." },
+        { result: "November 3rd, December 1st, January 5th" },
+        { text: "Looking up Head's PA in staff directory..." },
+        { result: "Found: Jane Smith (j.smith@school.com)" }
+      ]},
+      // ── Event Name ──
+      {
+        type: "chips",
+        text: "What would you like to call this event?",
+        items: [
+          { text: "Head's Open Mornings", response: "Head's Open Mornings" },
+          { text: "Open Morning Tours", response: "Open Morning Tours" },
+          { text: "Private Tours", response: "Private Tours" }
+        ],
+        showOther: true,
+        response: "Open Morning Tours"
+      },
+      { type: "ava", text: "I'll create one event with three separate sessions, one per tour date. Here's what I've worked out:\n\n• Session 1: Tuesday 3 November 2026, 09:30–11:00\n• Session 2: Tuesday 1 December 2026, 09:30–11:00\n• Session 3: Tuesday 5 January 2027, 09:30–11:00\n\nJane Smith (Head's PA) will receive an email notification for every new registration across all three dates.\n\nDoes \"Private Visit\" work as the event type, or would you prefer something else?" },
+      { type: "chips", text: "Does \"Private Visit\" work as the event type?", items: [
+        { text: "Private Visit", response: "Private Visit" },
+        { text: "Open Day", response: "Open Day" },
+        { text: "Open Morning", response: "Open Morning" }
+      ], showOther: true, response: "Private Visit" },
+      { type: "chips", text: "Should families be able to self-register through a public link?", items: [
+        { text: "Yes, self-registration", response: "Yes, self-registration" },
+        { text: "No, internal only", response: "No, internal only" }
+      ], showOther: true, response: "Yes, self-registration" },
+      { type: "confirm", title: "Create Event with Sessions", icon: "📅", rows: [
+        { label: "Event Type", value: "Private Visit" },
+        { label: "Name", value: "Open Morning Tours" },
+        { label: "Self-Registration", value: "Yes" },
+        { label: "Staff Notification", value: "Jane Smith (Head's PA)" },
+        { label: "Session 1", value: "Tue 3 Nov — 09:30–11:00 — 15 places" },
+        { label: "Session 2", value: "Tue 1 Dec — 09:30–11:00 — 15 places" },
+        { label: "Session 3", value: "Tue 5 Jan — 09:30–11:00 — 15 places" },
+        { label: "Status", value: "Draft" }
+      ], feed: { level: "done", title: "Event created (draft)", desc: "I created Open Morning Tours with 3 sessions" } },
+      { type: "user", text: "✓ Confirmed" },
+      { type: "ava", text: "<strong>I created your Open Morning Tours as a draft</strong> with three sessions. Jane Smith will be emailed whenever someone registers for any date.\n\nRegistration link: <a href='#' style='color:#263c91;'>https://apply.school.com/events/open-morning-tours-2026</a>\n\nFamilies will see all three dates and pick the one that suits them. When one date fills up (15 families), it shows as full while the others stay open." },
+      // ── Confirmation Emails ──
+      {
+        type: "ava",
+        text: "I've set up confirmation emails for each tour date — each includes the specific session date, time, and preparation notes. Would you like to review them?"
+      },
+      {
+        type: "chips",
+        text: "Review the confirmation emails?",
+        items: [
+          { text: "Review emails", response: "Review emails" },
+          { text: "Looks good", response: "Looks good" },
+          { text: "Edit emails", response: "Edit emails" }
+        ],
+        showOther: false,
+        response: "Looks good"
+      },
+      { type: "chips", text: "What would you like to do next?", items: [
+        { text: "Publish now", response: "Publish now" },
+        { text: "Add custom questions", response: "Add custom questions" },
+        { text: "Enable waitlist", response: "Enable waitlist" },
+        { text: "Keep as draft", response: "Keep as draft" }
+      ], showOther: true, response: "Publish now" },
+      { type: "gate", title: "Publish Event", icon: "🌐", rows: [
+        { label: "Event", value: "Open Morning Tours" },
+        { label: "Sessions", value: "3 (Nov, Dec, Jan)" },
+        { label: "Visible to", value: "All families" },
+        { label: "Registration", value: "Open immediately" }
+      ], warning: "All three tour dates will become visible and bookable by parents.", buttonText: "Publish", feed: { level: "review", title: "Published event", desc: "Now visible — 3 tour dates bookable" } },
+      { type: "user", text: "✓ Published" },
+      { type: "ava", text: "All three Open Morning Tours are now live. Families can register for their preferred date.", feed: { level: "done", title: "Event published", desc: "3 tour dates now live" } },
+      { type: "time-divider", label: "5 days before November tour" },
+      { type: "alert", level: "insight", title: "November Tour: 8 of 15 slots filled", text: "<strong>I noticed</strong> your Open Morning Tour is on Tuesday. 7 slots still available. Last month's tour filled completely 10 days before the date.", why: "Tour date is approaching with available capacity remaining.", actions: ["Draft invitation to recent enquiries", "View who's registered", "Dismiss"], feed: { level: "insight", title: "Tour capacity alert", desc: "I noticed 8/15 filled for November tour" } },
+      { type: "time-divider", label: "Day before November tour" },
+      { type: "alert", level: "done", title: "Pre-meeting briefing generated", text: "<strong>Completed:</strong> Tomorrow's tour has 13 families. I've compiled a briefing for each family — name, child details, application status, previous attendance, and notes from prior interactions.", why: "Giving staff a summary of who's attending helps personalise the tour experience.", actions: ["View briefing", "Print briefing", "Send to Jane Smith"], feed: { level: "done", title: "Briefing generated", desc: "Completed: 13-family briefing for November tour" } },
+      { type: "time-divider", label: "Day after November tour" },
+      { type: "alert", level: "review", title: "Post-tour follow-up ready", text: "<strong>I've prepared</strong> two follow-up emails: a thank-you to the 11 attendees with an application link, and a \"sorry we missed you\" to the 2 no-shows with the December tour date.", why: "Post-event follow-up increases conversion. 11 of 13 registered families attended.", actions: ["Review attendee email", "Review no-show email", "Skip follow-up"], primaryAction: "Review attendee email", feed: { level: "review", title: "Follow-up emails drafted", desc: "I've prepared thank-you + no-show emails" } },
+      { type: "alert", level: "auto", title: "PA notifications sent", text: "<strong>Handled:</strong> 13 registration notification emails sent to Jane Smith (Head's PA) across all three tour dates. All used the configured notification setting.", feed: { level: "auto", title: "PA notifications", desc: "Handled: 13 notifications to Jane Smith" } }
+    ]
+  },
+
+  // ── Scenario 3 ──────────────────────────────────
+  {
+    id: 3,
+    title: "Clone Last Year's Event",
+    shortTitle: "Clone Event",
+    chatTitle: "Re-run Last Year's Event",
+    phases: [
+      { label: "Finding source",        startsAt: 0 },
+      { label: "Cloning settings",      startsAt: 4 },
+      { label: "Post-clone monitoring", startsAt: 14 }
+    ],
+    steps: [
+      { type: "user", text: "Duplicate last year's Spring Open Day but change the date to March 22nd and update the description. Keep all the same questions and email templates." },
+      { type: "progress", steps: [
+        { text: "Searching for last year's Spring Open Day..." },
+        { result: "Found: Spring Open Day (23 March 2025)" },
+        { text: "Loading event configuration..." },
+        { result: "Configuration loaded" }
+      ]},
+      { type: "ava-html", html: '<div style="font-size:13px;line-height:1.5;color:#374151;"><p style="margin-bottom:12px;">I found last year\'s Spring Open Day from 23 March 2025. Here\'s what it included:</p><table style="width:100%;font-size:12px;border-collapse:collapse;"><tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 0;color:#6b7280;">Type</td><td style="padding:6px 0;font-weight:600;">Open Day</td></tr><tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 0;color:#6b7280;">Time</td><td style="padding:6px 0;font-weight:600;">10:00 – 14:00</td></tr><tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 0;color:#6b7280;">Capacity</td><td style="padding:6px 0;font-weight:600;">250</td></tr><tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 0;color:#6b7280;">Custom questions</td><td style="padding:6px 0;font-weight:600;">3 — Dietary, Accessibility, How did you hear</td></tr><tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 0;color:#6b7280;">Email templates</td><td style="padding:6px 0;font-weight:600;">2 — Confirmation, 48-hour reminder</td></tr><tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 0;color:#6b7280;">Filters</td><td style="padding:6px 0;font-weight:600;">Year 7 and Year 8 only</td></tr><tr><td style="padding:6px 0;color:#6b7280;">Waitlist</td><td style="padding:6px 0;font-weight:600;">Enabled</td></tr></table></div>' },
+      { type: "ava", text: "I'll clone everything and update the date to 22 March 2026. What should the new description say?" },
+      { type: "chips", text: "What should the new description say?", items: [
+        { text: "Keep the same description", response: "Keep the same description" }
+      ], showOther: true, response: "Welcome to our annual Spring Open Day. Come and see our school in action, meet our staff, and explore our facilities. Suitable for families considering Year 7 and Year 8 entry in September 2027." },
+      { type: "ava", text: "I'll clone the event with the new date and description. All three questions, both email templates, and the Year 7/8 filter will carry over unchanged." },
+      // ── Form/Destination ──
+      {
+        type: "chips",
+        text: "Which application form should the cloned event be linked to? The original was on Year 7 (2024/2025).\n\nI'm suggesting Year 7 (2026/2027) as the next upcoming intake.",
+        items: [
+          { text: "Year 7 (2025/2026)", response: "Year 7 (2025/2026)" },
+          { text: "Year 7 (2026/2027)", response: "Year 7 (2026/2027)" }
+        ],
+        showOther: true,
+        response: "Year 7 (2026/2027)"
+      },
+      { type: "confirm", title: "Clone Event", icon: "📋", rows: [
+        { label: "Source Event", value: "Spring Open Day (23 Mar 2025)" },
+        { label: "★ New Date", value: "22 March 2026" },
+        { label: "Time", value: "10:00 – 14:00 (cloned)" },
+        { label: "Max Seats", value: "250 (cloned)" },
+        { label: "★ Description", value: "Updated for 2026" },
+        { label: "Custom questions", value: "3 (cloned)" },
+        { label: "Email templates", value: "2 (cloned)" },
+        { label: "Visibility filter", value: "Year 7, Year 8 (cloned)" },
+        { label: "Status", value: "Draft" }
+      ], feed: { level: "done", title: "Event cloned (draft)", desc: "I created Spring Open Day 2026 from last year" } },
+      { type: "user", text: "✓ Confirmed" },
+      { type: "ava", text: "<strong>I created your Spring Open Day 2026 as a draft</strong> — cloned from last year with the new date and description. All questions, emails, and filters carried over.\n\nRegistration link: <a href='#' style='color:#263c91;'>https://apply.school.com/events/spring-open-day-2026</a>" },
+      { type: "chips", text: "What would you like to do next?", items: [
+        { text: "Publish now", response: "Publish now" },
+        { text: "Review cloned questions", response: "Review cloned questions" },
+        { text: "Review cloned emails", response: "Review cloned emails" },
+        { text: "Edit details", response: "Edit details" }
+      ], showOther: true, response: "Publish now" },
+      { type: "gate", title: "Publish Event", icon: "🌐", rows: [
+        { label: "Event", value: "Spring Open Day" },
+        { label: "Date", value: "22 March 2026" },
+        { label: "Visible to", value: "Year 7 and Year 8 families" },
+        { label: "Registration", value: "Open immediately" }
+      ], warning: "This event will become visible to eligible families on the portal.", buttonText: "Publish", feed: { level: "review", title: "Published cloned event", desc: "Spring Open Day 2026 now live" } },
+      { type: "user", text: "✓ Published" },
+      { type: "ava", text: "Your Spring Open Day 2026 is now live for Year 7 and Year 8 families.", feed: { level: "done", title: "Event published", desc: "Spring Open Day 2026 visible to Y7/Y8" } },
+      { type: "time-divider", label: "Immediately after cloning" },
+      { type: "alert", level: "insight", title: "Cloned event review", text: "<strong>I noticed</strong> the cloned Spring Open Day uses last year's 48-hour reminder email. The reminder is scheduled to auto-send on 20 March 2026. The email text references \"Saturday\" — the new event date (22 March 2026) is also a Saturday, so the wording is correct.", why: "Cloned email templates sometimes contain day-of-week references that don't match the new date. I checked and this one is fine.", actions: ["Dismiss"], feed: { level: "insight", title: "Template date check", desc: "I noticed cloned email dates are correct" } },
+      { type: "time-divider", label: "During registration period" },
+      { type: "alert", level: "insight", title: "Year-on-year comparison: Spring Open Day", text: "<strong>Here's what I found:</strong> Overall registrations are running 21% behind last year at 14 days out, mainly in Year 7 (98 vs 130 last year). Year 8 is tracking closer (44 vs 50).", why: "Comparing registration pace against the source event helps identify whether additional promotion is needed.", actions: ["Draft promotional email", "View by source", "Dismiss"], feed: { level: "insight", title: "Registration comparison", desc: "I noticed registrations 21% behind last year" } }
+    ]
+  },
+
+  // ── Scenario 4 ──────────────────────────────────
+  {
+    id: 4,
+    title: "Restrict Visibility",
+    shortTitle: "Filters",
+    chatTitle: "Restricted Event Setup",
+    phases: [
+      { label: "Setting up event",       startsAt: 0 },
+      { label: "Configuring filters",    startsAt: 9 },
+      { label: "Post-publish",           startsAt: 16 }
+    ],
+    steps: [
+      { type: "user", text: "I want to create an event that only Year 5 and Year 6 parents can see and register for. We don't want Year 3 or Year 4 families registering." },
+      { type: "ava", text: "I'll set up an event with visibility and registration restricted to Year 5 and Year 6 families only. No other year groups will see it or be able to register.\n\nWhat type of event is this?" },
+      { type: "chips", text: "What type of event is this?", items: [
+        { text: "Open Day", response: "Open Day" },
+        { text: "Open Evening", response: "Open Evening" },
+        { text: "Taster Day", response: "Taster Day" },
+        { text: "Private Visit", response: "Private Visit" }
+      ], showOther: true, response: "Taster Day" },
+      { type: "chips", text: "What would you like to call this event?", items: [
+        { text: "Year 5 & 6 Taster Day", response: "Year 5 & 6 Taster Day" },
+        { text: "Junior Taster Afternoon", response: "Junior Taster Afternoon" },
+        { text: "Prep School Taster Day", response: "Prep School Taster Day" }
+      ], showOther: true, response: "Year 5 & 6 Taster Afternoon" },
+      { type: "chips", text: "When is the Taster Afternoon?", items: [
+        { text: "Next Saturday", response: "Next Saturday" },
+        { text: "In 2 weeks", response: "In 2 weeks" },
+        { text: "Next month", response: "Next month" }
+      ], showOther: true, otherType: "date", otherPrefill: "2026-11-28", response: "November 28th" },
+      { type: "chips", text: "What time does it run?", items: [
+        { text: "9:00am – 12:00pm", response: "9:00am – 12:00pm" },
+        { text: "1:30pm – 3:30pm", response: "1:30pm – 3:30pm" },
+        { text: "10:00am – 2:00pm", response: "10:00am – 2:00pm" }
+      ], showOther: true, otherType: "time", otherPrefill: { start: "13:30", end: "15:30" }, response: "1:30pm – 3:30pm" },
+      { type: "chips", text: "How many attendees can you accommodate?", items: [
+        { text: "No limit", response: "No limit" },
+        { text: "40", response: "40" },
+        { text: "60", response: "60" },
+        { text: "80", response: "80" }
+      ], showOther: true, response: "80" },
+      // ── Self-Registration ──
+      {
+        type: "chips",
+        text: "Should parents be able to register themselves through a link?",
+        items: [
+          { text: "Yes, self-registration", response: "Yes, self-registration" },
+          { text: "No, internal only", response: "No, internal only" }
+        ],
+        showOther: false,
+        response: "Yes, self-registration"
+      },
+      { type: "ava", text: "I have everything I need. I'll create this as a draft with the filters applied." },
+      { type: "confirm", title: "Create New Event", icon: "📅", rows: [
+        { label: "Event Type", value: "Taster Day" },
+        { label: "Name", value: "Year 5 & 6 Taster Afternoon" },
+        { label: "Date", value: "28 November 2026" },
+        { label: "Time", value: "13:30 – 15:30" },
+        { label: "Max Seats", value: "80" },
+        { label: "Self-Registration", value: "Yes" },
+        { label: "🔒 Visibility", value: "Year 5, Year 6 only" },
+        { label: "🔒 Registration", value: "Year 5, Year 6 only" },
+        { label: "Status", value: "Draft" }
+      ], feed: { level: "done", title: "Filtered event created", desc: "I created Year 5 & 6 Taster Afternoon (draft)" } },
+      { type: "user", text: "✓ Confirmed" },
+      { type: "ava", text: "<strong>I created the Taster Afternoon as a draft</strong> with filters applied. Here's how the filters work:\n\n• Year 5 parent logging in → sees the event and can register ✓\n• Year 6 parent logging in → sees the event and can register ✓\n• Year 4 parent logging in → does not see the event at all ✗\n• If someone shares the direct link with a Year 4 family → the system blocks their registration ✗\n\nThe filters apply to both visibility (what families see) and registration (who can submit the form)." },
+      { type: "chips", text: "What would you like to do next?", items: [
+        { text: "Publish now", response: "Publish now" },
+        { text: "Add Year 4", response: "Add Year 4" },
+        { text: "Add custom questions", response: "Add custom questions" },
+        { text: "Keep as draft", response: "Keep as draft" }
+      ], showOther: true, response: "Publish now" },
+      { type: "gate", title: "Publish Event", icon: "🌐", rows: [
+        { label: "Event", value: "Year 5 & 6 Taster Afternoon" },
+        { label: "Date", value: "28 November 2026" },
+        { label: "Visible to", value: "Year 5 and Year 6 families ONLY" },
+        { label: "Registration", value: "Restricted to Year 5 and Year 6" }
+      ], warning: "Only families matching the filter will see this event. Other year groups will not.", buttonText: "Publish", feed: { level: "review", title: "Published filtered event", desc: "Visible to Year 5 & 6 only" } },
+      { type: "user", text: "✓ Published" },
+      { type: "ava", text: "Your Year 5 & 6 Taster Afternoon is now live — visible only to Year 5 and Year 6 families.\n\nYou can also filter by application status or enquiry stage if needed.", feed: { level: "done", title: "Event published", desc: "Taster Afternoon live for Y5/Y6" } },
+      { type: "time-divider", label: "Later that week" },
+      { type: "user", text: "Actually, add Year 4 to the Taster Afternoon filter too." },
+      { type: "ava", text: "The Taster Afternoon is already published. Adding Year 4 means those families will now see the event on their portal and can register. There are currently 23 Year 4 families in the system." },
+      { type: "gate", title: "Update Access Filter", icon: "🔒", rows: [
+        { label: "Event", value: "Year 5 & 6 Taster Afternoon" },
+        { label: "Status", value: "Published (live)" },
+        { label: "Current filter", value: "Year 5, Year 6" },
+        { label: "★ New filter", value: "Year 4, Year 5, Year 6" },
+        { label: "Impact", value: "23 Year 4 families will now see this event" }
+      ], warning: "Expanding the filter on a live event changes which families see the event — it has an immediate external impact.", buttonText: "Confirm", feed: { level: "review", title: "Filter expanded", desc: "Year 4 added to live event filter" } },
+      { type: "user", text: "✓ Confirmed" },
+      { type: "ava", text: "<strong>Completed:</strong> The filter now includes Year 4, Year 5, and Year 6. 23 Year 4 families can now see and register for the Taster Afternoon.", feed: { level: "done", title: "Filter updated", desc: "Completed: Y4 added — 23 new families can see event" } }
+    ]
+  },
+
+  // ── Scenario 5 ──────────────────────────────────
+  {
+    id: 5,
+    title: "Enable Waitlist",
+    shortTitle: "Waitlist",
+    chatTitle: "Waitlist Management",
+    phases: [
+      { label: "Finding event",         startsAt: 0 },
+      { label: "Configuring waitlist",  startsAt: 3 },
+      { label: "Monitoring",            startsAt: 8 }
+    ],
+    steps: [
+      { type: "user", text: "Our Open Evening is full but we keep getting interested families. Turn on the waitlist and set it to automatically promote people if someone cancels." },
+      { type: "progress", steps: [
+        { text: "Finding your Open Evening..." },
+        { result: "Year 7 Open Evening (15 Oct 2026) — 200/200 registered" }
+      ]},
+      { type: "ava", text: "Your Year 7 Open Evening is at full capacity — 200 of 200 places filled. I'll enable the waitlist with auto-promotion.\n\nWith auto-promotion turned on:\n• New registrations join a queue instead of being turned away\n• If a confirmed family cancels, the next person on the waitlist is automatically moved to confirmed and notified by email\n• No manual action needed from your team\n\nShould the waitlist have a maximum size, or unlimited?" },
+      // ── Auto-Promotion Confirmation ──
+      {
+        type: "chips",
+        text: "How should the waitlist work when a place opens up?",
+        items: [
+          { text: "Auto-promote next family", response: "Auto-promote next family" },
+          { text: "Let me choose manually", response: "Let me choose manually" },
+          { text: "Ask me each time", response: "Ask me each time" }
+        ],
+        showOther: false,
+        response: "Auto-promote next family"
+      },
+      { type: "chips", text: "Should the waitlist have a maximum size?", items: [
+        { text: "Unlimited", response: "Unlimited" },
+        { text: "Cap at 50", response: "Cap at 50" },
+        { text: "Cap at 100", response: "Cap at 100" }
+      ], showOther: true, response: "Unlimited" },
+      { type: "confirm", title: "Update Event", icon: "✏️", rows: [
+        { label: "Event", value: "Year 7 Open Evening (15 Oct)" },
+        { label: "Current Status", value: "Published — 200/200 registered" },
+        { label: "★ Waitlist", value: "Enabled (unlimited)" },
+        { label: "★ Auto-Promotion", value: "On" },
+        { label: "★ Public Message", value: "\"Waitlist available\"" },
+        { label: "★ Waitlist Email", value: "You're on the waitlist — we'll notify you if a space opens" },
+        { label: "★ Promotion Email", value: "Good news — a place has become available and you're now confirmed" }
+      ], feed: { level: "done", title: "Waitlist enabled", desc: "I created waitlist with auto-promotion for Open Evening" } },
+      { type: "user", text: "✓ Confirmed" },
+      { type: "ava-html", html: '<div style="font-size:13px;color:#374151;line-height:1.5;"><p style="margin-bottom:10px;"><strong>Completed:</strong> Waitlist is live on your Year 7 Open Evening. Here\'s what happens from now:</p><table style="width:100%;font-size:12px;border-collapse:collapse;"><tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 0;color:#6b7280;">New registration</td><td style="padding:6px 0;font-weight:600;">"Join waitlist" button</td><td style="padding:6px 0;font-weight:600;">Waitlist confirmation email</td></tr><tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 0;color:#6b7280;">Someone cancels</td><td style="padding:6px 0;font-weight:600;">—</td><td style="padding:6px 0;font-weight:600;">Next waitlisted family gets promotion email</td></tr><tr><td style="padding:6px 0;color:#6b7280;">Promoted family</td><td style="padding:6px 0;font-weight:600;">Status changes to "Confirmed"</td><td style="padding:6px 0;font-weight:600;">"A place has become available" notification</td></tr></table><p style="margin-top:10px;">Currently 0 families on the waitlist. The registration page now shows "Waitlist available" instead of "Fully booked."</p></div>' },
+      { type: "time-divider", label: "2 weeks later" },
+      { type: "alert", level: "insight", title: "Waitlist growing: Year 7 Open Evening", text: "<strong>I noticed</strong> 35 families are now on the waitlist. Based on your typical cancellation rate of 12%, approximately 24 places may open up. That would serve about 69% of the waitlist.", why: "Waitlist is longer than likely available spots. You may want to consider adding a second event date or increasing capacity.", actions: ["Increase capacity", "Create a second date", "View waitlist", "Dismiss"], feed: { level: "insight", title: "Waitlist size alert", desc: "I noticed 35 families on waitlist — exceeds likely openings" } },
+      { type: "alert", level: "auto", title: "Auto-promoted 1 family from waitlist", text: "<strong>Handled:</strong> The Carter family cancelled. The Patel family (next on waitlist, joined 3 Oct at 14:22) has been promoted to confirmed and notified by email. Waitlist: 34 remaining. Confirmed: 200/200.", feed: { level: "auto", title: "Auto-promotion", desc: "Handled: Patel family promoted from waitlist" } }
+    ]
+  },
+
+  // ── Scenario 6 ──────────────────────────────────
+  {
+    id: 6,
+    title: "Add Custom Questions",
+    shortTitle: "Questions",
+    chatTitle: "Registration Form Questions",
+    phases: [
+      { label: "Searching questions", startsAt: 0 },
+      { label: "Updating form",       startsAt: 3 }
+    ],
+    steps: [
+      { type: "user", text: "Add a dietary requirements question and an accessibility needs question to our Open Day registration form. Make dietary requirements compulsory." },
+      { type: "progress", steps: [
+        { text: "Searching for existing questions..." },
+        { result: "Found existing \"Dietary Requirements\" question (used on 3 previous events)" },
+        { text: "Searching for accessibility question..." },
+        { result: "No existing match found" }
+      ]},
+      { type: "ava", text: "I found an existing \"Dietary Requirements\" question that's been used on your last 3 events. It's a free text field. Would you like to reuse it, or create a different version?\n\nFor \"Accessibility Needs\" — I didn't find an existing match, so I'll create a new one." },
+      { type: "chips", text: "What would you like to do with the existing dietary question?", items: [
+        { text: "Reuse existing dietary question", response: "Reuse existing dietary question" },
+        { text: "Create a new one", response: "Create a new one" },
+        { text: "Show me the existing question", response: "Show me the existing question" }
+      ], showOther: true, response: "Show me the existing question" },
+      { type: "ava-html", html: '<div style="font-size:13px;color:#374151;line-height:1.5;"><p style="margin-bottom:8px;">Here\'s the existing question:</p><table style="width:100%;font-size:12px;border-collapse:collapse;"><tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 0;color:#6b7280;">Question text</td><td style="padding:6px 0;font-weight:600;">"Please list any dietary requirements or allergies"</td></tr><tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 0;color:#6b7280;">Answer type</td><td style="padding:6px 0;font-weight:600;">Free text</td></tr><tr><td style="padding:6px 0;color:#6b7280;">Previously used on</td><td style="padding:6px 0;font-weight:600;">Spring Open Day 2025, Autumn Open Evening 2025, Year 7 Taster Day 2025</td></tr></table></div>' },
+      { type: "chips", text: "Want to reuse this one?", items: [
+        { text: "Yes, reuse it", response: "Yes, reuse it" },
+        { text: "I want different wording", response: "I want different wording" }
+      ], showOther: true, response: "Yes, reuse it" },
+      { type: "chips", text: "Should these questions be answered for every attendee, or just the person filling in the form?", items: [
+        { text: "Every attendee", response: "Every attendee" },
+        { text: "Just the registrant", response: "Just the registrant" }
+      ], showOther: true, response: "Every attendee" },
+      { type: "confirm", title: "Add Questions to Open Day", icon: "❓", rows: [
+        { label: "Event", value: "Spring Open Day (22 Mar 2026)" },
+        { label: "Question 1", value: "\"Please list any dietary requirements or allergies\"" },
+        { label: "Source", value: "Reused (3 previous events)" },
+        { label: "Compulsory", value: "Yes" },
+        { label: "Question 2", value: "\"Please describe any accessibility needs\"" },
+        { label: "Source", value: "New" },
+        { label: "Compulsory", value: "No" },
+        { label: "Collect For", value: "Every attendee" }
+      ], feed: { level: "done", title: "Questions added", desc: "I created 2 questions on Open Day form" } },
+      { type: "user", text: "✓ Confirmed" },
+      { type: "ava", text: "<strong>Completed:</strong> Both questions are now on your Open Day registration form:\n\n1. Dietary requirements — compulsory, families must answer before submitting\n2. Accessibility needs — optional, families can leave it blank\n\nBoth questions will appear for every attendee listed on the registration." },
+      { type: "chips", text: "Anything else?", items: [
+        { text: "Preview the form", response: "Preview the form" },
+        { text: "Add another question", response: "Add another question" },
+        { text: "Reorder questions", response: "Reorder questions" },
+        { text: "Add \"How did you hear about us?\"", response: "Add \"How did you hear about us?\"" }
+      ], showOther: true, response: "Preview the form" }
+    ]
+  },
+
+  // ── Scenario 7 ──────────────────────────────────
+  {
+    id: 7,
+    title: "Attendance Report",
+    shortTitle: "Report",
+    chatTitle: "Post-Event Analysis",
+    phases: [
+      { label: "Pulling data",        startsAt: 0 },
+      { label: "Analysing results",   startsAt: 3 },
+      { label: "Follow-up",           startsAt: 11 }
+    ],
+    steps: [
+      { type: "user", text: "How many people registered for last month's Open Day vs how many actually came? Break it down by year group." },
+      { type: "progress", steps: [
+        { text: "Finding last month's Open Day..." },
+        { result: "Spring Open Day (22 February 2026)" },
+        { text: "Pulling registration data..." },
+        { result: "132 registrations found" },
+        { text: "Cross-referencing attendance records..." },
+        { result: "Attendance data compiled" }
+      ]},
+      { type: "ava", text: "Here's the attendance breakdown for the Spring Open Day on 22 February:" },
+      { type: "ava-html", html: '<table style="width:100%;font-size:12px;border-collapse:collapse;background:white;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;"><thead><tr style="background:#f9fafb;"><th style="text-align:left;padding:8px 12px;color:#6b7280;font-weight:600;font-size:10px;text-transform:uppercase;border-bottom:1px solid #e5e7eb;">Year Group</th><th style="text-align:left;padding:8px 12px;color:#6b7280;font-weight:600;font-size:10px;text-transform:uppercase;border-bottom:1px solid #e5e7eb;">Registered</th><th style="text-align:left;padding:8px 12px;color:#6b7280;font-weight:600;font-size:10px;text-transform:uppercase;border-bottom:1px solid #e5e7eb;">Attended</th><th style="text-align:left;padding:8px 12px;color:#6b7280;font-weight:600;font-size:10px;text-transform:uppercase;border-bottom:1px solid #e5e7eb;">No-Shows</th><th style="text-align:left;padding:8px 12px;color:#6b7280;font-weight:600;font-size:10px;text-transform:uppercase;border-bottom:1px solid #e5e7eb;">No-Show Rate</th></tr></thead><tbody><tr style="border-bottom:1px solid #f3f4f6;"><td style="padding:8px 12px;">Year 7</td><td style="padding:8px 12px;">85</td><td style="padding:8px 12px;">68</td><td style="padding:8px 12px;">17</td><td style="padding:8px 12px;">20%</td></tr><tr style="border-bottom:1px solid #f3f4f6;"><td style="padding:8px 12px;">Year 8</td><td style="padding:8px 12px;">32</td><td style="padding:8px 12px;">28</td><td style="padding:8px 12px;">4</td><td style="padding:8px 12px;">13%</td></tr><tr style="border-bottom:1px solid #f3f4f6;"><td style="padding:8px 12px;">Year 9</td><td style="padding:8px 12px;">15</td><td style="padding:8px 12px;">11</td><td style="padding:8px 12px;">4</td><td style="padding:8px 12px;">27%</td></tr><tr style="font-weight:600;"><td style="padding:8px 12px;">Total</td><td style="padding:8px 12px;">132</td><td style="padding:8px 12px;">107</td><td style="padding:8px 12px;">25</td><td style="padding:8px 12px;">19%</td></tr></tbody></table>' },
+      { type: "ava", text: "Year 9 had the highest no-show rate at 27%, though the sample is small (15 registrations). Overall, about 1 in 5 registered families didn't attend — consistent with your historical average of 18%.", feed: { level: "done", title: "Report generated", desc: "Completed: Attendance breakdown for Spring Open Day" } },
+      { type: "chips", text: "What would you like to explore?", items: [
+        { text: "Compare to last year", response: "Compare to last year" },
+        { text: "Show who didn't attend", response: "Show who didn't attend" },
+        { text: "Download CSV", response: "Download CSV" },
+        { text: "Check who hasn't applied yet", response: "Check who hasn't applied yet" }
+      ], showOther: true, response: "Check who hasn't applied yet" },
+      { type: "progress", steps: [
+        { text: "Cross-referencing attendees with application records..." },
+        { result: "Analysis complete" }
+      ]},
+      { type: "ava", text: "Of the 107 families who attended:" },
+      { type: "ava-html", html: '<table style="width:100%;font-size:12px;border-collapse:collapse;background:white;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;"><thead><tr style="background:#f9fafb;"><th style="text-align:left;padding:8px 12px;color:#6b7280;font-weight:600;font-size:10px;text-transform:uppercase;border-bottom:1px solid #e5e7eb;">Application Status</th><th style="text-align:left;padding:8px 12px;color:#6b7280;font-weight:600;font-size:10px;text-transform:uppercase;border-bottom:1px solid #e5e7eb;">Count</th><th style="text-align:left;padding:8px 12px;color:#6b7280;font-weight:600;font-size:10px;text-transform:uppercase;border-bottom:1px solid #e5e7eb;">% of Attendees</th></tr></thead><tbody><tr style="border-bottom:1px solid #f3f4f6;"><td style="padding:8px 12px;">Application submitted</td><td style="padding:8px 12px;">45</td><td style="padding:8px 12px;">42%</td></tr><tr style="border-bottom:1px solid #f3f4f6;"><td style="padding:8px 12px;">Application started (not submitted)</td><td style="padding:8px 12px;">18</td><td style="padding:8px 12px;">17%</td></tr><tr><td style="padding:8px 12px;">No application started</td><td style="padding:8px 12px;">44</td><td style="padding:8px 12px;">41%</td></tr></tbody></table>' },
+      { type: "ava", text: "44 families attended but haven't started an application at all. 18 more have started but not finished. That's 62 families worth following up with.\n\nLast year, 58% of attendees had applied by this point — you're at 42%, so conversion is running behind." },
+      { type: "chips", text: "What would you like to do?", items: [
+        { text: "Draft follow-up to non-applicants", response: "Draft follow-up to non-applicants" },
+        { text: "Draft chaser to incomplete applications", response: "Draft chaser to incomplete applications" },
+        { text: "Show the 62 families", response: "Show the 62 families" },
+        { text: "Break down by year group", response: "Break down by year group" }
+      ], showOther: true, response: "Draft follow-up to non-applicants" },
+      { type: "email-draft", title: "Send Follow-Up Email", to: "44 families (attended, no application)", subject: "Thank you for visiting — start your application today", body: "Dear [Parent Name],\n\nThank you for attending our Spring Open Day on 22 February. We hope you and [Child Name] enjoyed the visit.\n\nIf you'd like to take the next step, you can start an application through your admissions portal:\n[Application Link]\n\nIf you have any questions about the application process or would like to arrange a private tour, please don't hesitate to get in touch.\n\n[School Name] Admissions Team", warning: "This will send 44 emails to families.", feed: { level: "review", title: "Follow-up email drafted", desc: "I've prepared email for 44 non-applicant attendees" } },
+      { type: "user", text: "✓ Sent" },
+      { type: "ava", text: "<strong>Completed:</strong> 44 follow-up emails delivered to families who attended the Spring Open Day but haven't applied. I'll track open rates and you can check engagement in a few days.", feed: { level: "done", title: "Follow-up sent", desc: "Completed: 44 emails sent to non-applicant attendees" } },
+      // ── EventInsightStatistic ──
+      {
+        type: "ava",
+        text: "I've saved this attendance data as an insight report — you can compare it against future events.",
+        feed: { level: "done", title: "Insight report saved", desc: "Completed: Attendance data saved for comparison" }
+      },
+      { type: "time-divider", label: "7 days post-event" },
+      { type: "alert", level: "insight", title: "Post-event conversion update", text: "<strong>I noticed</strong> it's been 7 days since your Open Day. Attendee-to-application pipeline: Applied 42%, Started 17%, No action 41%. Last year at 7 days post-event: 58% had applied. You're 16 points behind.", why: "This check runs automatically 7 days after every event to track conversion effectiveness.", actions: ["Draft follow-up emails", "View detailed breakdown", "Dismiss"], feed: { level: "insight", title: "7-day conversion check", desc: "I noticed conversion 16 points behind last year" } },
+      { type: "time-divider", label: "3 days after follow-up sent" },
+      { type: "alert", level: "done", title: "Email performance: Open Day follow-up", text: "<strong>Completed:</strong> Email engagement report for the follow-up sent 3 days ago to 44 families. Opened: 31 (70%). Clicked application link: 14 (32%). Started application since: 8 (18%). Submitted application since: 3 (7%).", why: "Automatically tracked engagement for the follow-up emails you sent on 25 February.", actions: ["Send reminder to 13 who haven't opened", "View who clicked but didn't apply", "Dismiss"], feed: { level: "done", title: "Email engagement report", desc: "Completed: 70% open rate, 32% click rate" } }
+    ]
+  },
+
+  // ── Scenario 8 ──────────────────────────────────
+  {
+    id: 8,
+    title: "Close Registrations",
+    shortTitle: "Cutoff",
+    chatTitle: "Registration Cutoff",
+    phases: [
+      { label: "Configuring cutoff", startsAt: 0 },
+      { label: "Edge cases",         startsAt: 10 },
+      { label: "Monitoring",         startsAt: 16 }
+    ],
+    steps: [
+      { type: "user", text: "Close registrations for the Year 7 Open Evening at 5pm on October 14th, one day before the event. After that, show a message saying the event is fully booked." },
+      { type: "ava", text: "I'll set the registration cutoff for your Year 7 Open Evening to 14 October at 17:00. After that time, the registration page will automatically switch from the sign-up form to your custom message." },
+      { type: "confirm", title: "Update Event", icon: "✏️", rows: [
+        { label: "Event", value: "Year 7 Open Evening" },
+        { label: "Date", value: "15 October 2026" },
+        { label: "Current Status", value: "Published — 187/200 registered" },
+        { label: "★ Close Registration", value: "14 October 2026, 17:00" },
+        { label: "★ Closed Message", value: "\"This event is now fully booked.\"" }
+      ], feed: { level: "done", title: "Cutoff configured", desc: "I created registration cutoff for 14 Oct 5pm" } },
+      { type: "user", text: "✓ Confirmed" },
+      { type: "ava-html", html: '<div style="font-size:13px;color:#374151;line-height:1.5;"><p style="margin-bottom:10px;"><strong>Completed.</strong> Registration will close automatically at 5pm on 14 October. Here\'s what will happen:</p><table style="width:100%;font-size:12px;border-collapse:collapse;"><tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:6px 0;color:#6b7280;">Before 14 Oct 17:00</td><td style="padding:6px 0;font-weight:600;">Normal registration form — can sign up</td></tr><tr><td style="padding:6px 0;color:#6b7280;">After 14 Oct 17:00</td><td style="padding:6px 0;font-weight:600;">"This event is now fully booked." — no form</td></tr></table><p style="margin-top:10px;">No manual action needed — the system handles the switch automatically.</p></div>' },
+      { type: "chips", text: "Anything else?", items: [
+        { text: "Preview the closed page", response: "Preview the closed page" },
+        { text: "Add a \"book a tour\" link", response: "Add a \"book a tour\" link" },
+        { text: "Change the cutoff time", response: "Change the cutoff time" },
+        { text: "Change the message", response: "Change the message" }
+      ], showOther: true, response: "Add a \"book a tour\" link" },
+      { type: "ava", text: "I'll update the closed message to include a link to your Private Tour booking page. That way, families who find the event after it closes still have a way to engage." },
+      { type: "confirm", title: "Update Closed Message", icon: "✏️", rows: [
+        { label: "Event", value: "Year 7 Open Evening" },
+        { label: "Current message", value: "\"This event is now fully booked.\"" },
+        { label: "★ Updated message", value: "\"This event is now fully booked. If you'd like to visit us, you can book a private tour here: [Book a Private Tour]\"" }
+      ], feed: { level: "done", title: "Closed message updated", desc: "Completed: Added tour link to closed page" } },
+      { type: "user", text: "✓ Confirmed" },
+      { type: "ava", text: "<strong>Completed.</strong> After 5pm on 14 October, families will see the fully booked message with a link to book a private tour instead." },
+      { type: "time-divider", label: "Edge case: immediate closure" },
+      { type: "user", text: "Actually, close registrations right now. We need to sort out logistics." },
+      { type: "ava", text: "Closing registrations now means any family currently on the registration page won't be able to submit. There are 187 registrations currently." },
+      { type: "gate", title: "Close Registrations Now", icon: "⚠", rows: [
+        { label: "Event", value: "Year 7 Open Evening" },
+        { label: "Current", value: "187 / 200 registered" },
+        { label: "Scheduled close", value: "14 Oct 2026, 17:00" },
+        { label: "★ New close", value: "Immediately" }
+      ], warning: "Registration form will be replaced with your closed message right away. Families currently viewing the page will not be able to submit.", buttonText: "Close Now", feed: { level: "review", title: "Immediate closure", desc: "Registration closed ahead of schedule" } },
+      { type: "user", text: "✓ Closed" },
+      { type: "ava", text: "<strong>Completed:</strong> Registration is now closed for the Year 7 Open Evening. The page shows your fully booked message with the tour link.", feed: { level: "done", title: "Registration closed", desc: "Completed: Closed immediately at user request" } },
+      { type: "time-divider", label: "2 hours before scheduled cutoff" },
+      { type: "alert", level: "insight", title: "Registration closing soon: Year 7 Open Evening", text: "<strong>I noticed</strong> registration closes in 2 hours (14 Oct, 17:00). Current status: 192 of 200 places filled. 8 places remaining. In the last 24 hours: 5 new registrations received.", why: "Approaching your scheduled registration cutoff. Flagging in case you want to adjust the cutoff time or capacity.", actions: ["Extend cutoff by 24 hours", "Increase capacity", "Dismiss"], feed: { level: "insight", title: "Cutoff approaching", desc: "I noticed 2 hours until registration closes" } },
+      { type: "alert", level: "done", title: "Registration closed: Year 7 Open Evening", text: "<strong>Completed:</strong> Registration automatically closed at 17:00 on 14 October as scheduled. Final count: 195 of 200 places filled. 5 unfilled spots.", why: "Scheduled cutoff triggered automatically. No manual action was needed.", actions: ["Reopen registration", "View final registration list", "Dismiss"], feed: { level: "done", title: "Auto-closed", desc: "Completed: Registration closed at 17:00 — 195/200" } },
+      { type: "alert", level: "insight", title: "Post-closure page visits", text: "<strong>I noticed</strong> since registration closed 6 hours ago, 14 families have visited the registration page and seen the closed message. 3 of those clicked through to the private tour booking link.", why: "Tracking post-closure interest helps gauge unmet demand for future event planning.", actions: ["View these families", "Dismiss"], feed: { level: "insight", title: "Post-closure activity", desc: "I noticed 14 families visited after closure — 3 clicked tour link" } }
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+let currentScenario = 0;
+let currentStep = 0;
+let feedItems = [];
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+function init() {
+  const select = document.getElementById('scenarioSelect');
+  select.innerHTML = scenarios.map((s, i) =>
+    `<option value="${i}">${s.id}. ${s.shortTitle}</option>`
+  ).join('');
+  loadScenario(0);
+}
+
+function loadScenario(idx) {
+  currentScenario = idx;
+  currentStep = 0;
+  feedItems = [];
+  window._chipSubmitOverride = null;
+
+  const s = scenarios[idx];
+  document.getElementById('chatTitle').textContent = s.chatTitle;
+  document.getElementById('chatMessages').innerHTML = '';
+  document.getElementById('feedEmpty').style.display = 'block';
+  document.getElementById('feedContent').querySelectorAll('.feed-item').forEach(el => el.remove());
+  document.getElementById('feedCount').textContent = '0';
+
+  // Render phase checklist
+  renderPhaseChecklist();
+
+  setInputState('idle');
+  setTimeout(() => { runStep(); }, 300);
+}
+
+// ═══════════════════════════════════════════════════
+//  STEP THROUGH CONVERSATION
+// ═══════════════════════════════════════════════════
+function runStep() {
+  const s = scenarios[currentScenario];
+  if (currentStep >= s.steps.length) {
+    setInputState('complete');
+    updatePhaseChecklist();
+    return;
+  }
+
+  updatePhaseChecklist();
+
+  const step = s.steps[currentStep];
+  const chat = document.getElementById('chatMessages');
+
+  switch (step.type) {
+    case 'user':
+      setInputState('typed', step.text);
+      break;
+
+    case 'ava':
+      setInputState('idle');
+      showTyping(chat, () => {
+        appendAvaMsg(chat, step.text);
+        if (step.feed) addFeedItem(step.feed);
+        currentStep++;
+        runStep();
+      });
+      break;
+
+    case 'ava-html':
+      setInputState('idle');
+      showTyping(chat, () => {
+        appendAvaHtml(chat, step.html);
+        currentStep++;
+        runStep();
+      });
+      break;
+
+    case 'thinking':
+      setInputState('idle');
+      appendThinking(chat, step.steps, () => {
+        currentStep++;
+        runStep();
+      });
+      break;
+
+    case 'chips':
+      setInputState('chips');
+      showTyping(chat, () => {
+        appendChips(chat, step);
+      });
+      break;
+
+    case 'confirm':
+      setInputState('card');
+      appendConfirmCard(chat, step);
+      break;
+
+    case 'gate':
+      setInputState('card');
+      appendGateCard(chat, step);
+      break;
+
+    case 'email-draft':
+      setInputState('card');
+      appendEmailDraft(chat, step);
+      break;
+
+    case 'progress':
+      setInputState('idle');
+      appendProgressBlock(chat, step.steps, () => {
+        currentStep++;
+        runStep();
+      });
+      break;
+
+    case 'time-divider':
+      setInputState('idle');
+      appendTimeDivider(chat, step.label);
+      currentStep++;
+      setTimeout(() => { runStep(); }, 400);
+      break;
+
+    case 'alert':
+      if (step.level === 'review') {
+        setInputState('alert');
+        appendAlert(chat, step);
+        if (step.feed) addFeedItem(step.feed);
+      } else {
+        setInputState('idle');
+        appendAlert(chat, step);
+        if (step.feed) addFeedItem(step.feed);
+        currentStep++;
+        setTimeout(() => { runStep(); }, 800);
+      }
+      break;
+
+    default:
+      currentStep++;
+      runStep();
+  }
+
+  scrollChat();
+}
+
+function restartScenario() {
+  loadScenario(currentScenario);
+}
+
+function setInputState(state, prefill) {
+  const input = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const pills = document.getElementById('suggestionPills');
+  pills.innerHTML = '';
+
+  switch (state) {
+    case 'idle':
+      input.disabled = true;
+      input.value = '';
+      input.placeholder = 'Emma is working...';
+      sendBtn.disabled = true;
+      break;
+    case 'chips':
+      input.disabled = true;
+      input.value = '';
+      input.placeholder = 'Choose an option above...';
+      sendBtn.disabled = true;
+      break;
+    case 'card':
+      input.disabled = true;
+      input.value = '';
+      input.placeholder = 'Review the card above...';
+      sendBtn.disabled = true;
+      break;
+    case 'alert':
+      input.disabled = true;
+      input.value = '';
+      input.placeholder = 'Review the notification above...';
+      sendBtn.disabled = true;
+      break;
+    case 'typed':
+      input.disabled = false;
+      input.value = prefill || '';
+      input.placeholder = 'Ask Emma anything...';
+      sendBtn.disabled = false;
+      input.focus();
+      input.select();
+      break;
+    case 'complete':
+      input.disabled = true;
+      input.value = '';
+      input.placeholder = 'Scenario complete — choose another above';
+      sendBtn.disabled = true;
+      break;
+  }
+}
+
+function submitInput() {
+  if (window._chipSubmitOverride) {
+    window._chipSubmitOverride();
+    return;
+  }
+
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const chat = document.getElementById('chatMessages');
+  appendUserMsg(chat, text);
+  setInputState('idle');
+  scrollChat();
+
+  currentStep++;
+  setTimeout(() => { runStep(); }, 300);
+}
+
+function finishCardAction(btn, workingText, doneText, userMsg, step) {
+  btn.classList.add('working');
+  btn.textContent = workingText;
+
+  setTimeout(() => {
+    btn.textContent = doneText;
+
+    const card = btn.closest('.confirm-card');
+    if (card) {
+      card.querySelectorAll('.card-btn').forEach(b => {
+        b.disabled = true;
+        b.style.opacity = '0.4';
+        b.style.pointerEvents = 'none';
+      });
+      btn.style.opacity = '1';
+    }
+
+    setTimeout(() => {
+      const chat = document.getElementById('chatMessages');
+      appendUserMsg(chat, userMsg);
+      if (step.feed) addFeedItem(step.feed);
+      // Show undo in feed
+      if (step.feed) {
+        const lastFeedItem = document.getElementById('feedContent').querySelector('.feed-item:last-child');
+        if (lastFeedItem) {
+          const undoEl = document.createElement('div');
+          undoEl.className = 'feed-undo';
+          undoEl.innerHTML = '<i class="fa-solid fa-rotate-left" style="font-size:10px;"></i> Undo available';
+          undoEl.style.cssText = 'font-size:10px;color:var(--agent-events);cursor:pointer;margin-top:4px;display:flex;align-items:center;gap:4px;';
+          undoEl.addEventListener('click', () => {
+            undoEl.textContent = '↩ Action would be undone';
+            undoEl.style.color = 'var(--gray-400)';
+            undoEl.style.cursor = 'default';
+          });
+          lastFeedItem.appendChild(undoEl);
+        }
+      }
+      setInputState('idle');
+      scrollChat();
+
+      currentStep++;
+      setTimeout(() => { runStep(); }, 300);
+    }, 300);
+  }, 600);
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER HELPERS
+// ═══════════════════════════════════════════════════
+function showTyping(container, callback, delay = 500) {
+  const typing = document.createElement('div');
+  typing.className = 'typing-indicator';
+  typing.innerHTML = `
+    <div class="msg-avatar">E</div>
+    <div class="typing-dots"><span></span><span></span><span></span></div>
+  `;
+  container.appendChild(typing);
+  scrollChat();
+  setTimeout(() => {
+    typing.remove();
+    callback();
+  }, delay);
+}
+
+function appendUserMsg(container, text) {
+  const el = document.createElement('div');
+  el.className = 'msg user';
+  el.innerHTML = `
+    <div class="msg-avatar">U</div>
+    <div class="msg-body">${text}</div>
+  `;
+  container.appendChild(el);
+}
+
+function appendAvaMsg(container, text) {
+  const el = document.createElement('div');
+  el.className = 'msg ava';
+  el.innerHTML = `
+    <div class="msg-avatar">E</div>
+    <div style="display:flex;flex-direction:column;">
+      <div class="msg-body">${text.replace(/\n/g, '<br>')}</div>
+      <div class="msg-actions">
+        <button class="msg-action-btn" title="Helpful" onclick="this.classList.toggle('active')"><i class="fa-regular fa-thumbs-up"></i></button>
+        <button class="msg-action-btn" title="Not helpful" onclick="this.classList.toggle('active')"><i class="fa-regular fa-thumbs-down"></i></button>
+        <button class="msg-action-btn" title="Copy" onclick="copyMsgText(this)"><i class="fa-regular fa-copy"></i></button>
+      </div>
+    </div>
+  `;
+  container.appendChild(el);
+}
+
+function appendAvaHtml(container, html) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'msg ava';
+  wrapper.innerHTML = `
+    <div class="msg-avatar">E</div>
+    <div style="display:flex;flex-direction:column;">
+      <div class="msg-body" style="padding:0;border:none;background:transparent;">${html}</div>
+      <div class="msg-actions">
+        <button class="msg-action-btn" title="Helpful" onclick="this.classList.toggle('active')"><i class="fa-regular fa-thumbs-up"></i></button>
+        <button class="msg-action-btn" title="Not helpful" onclick="this.classList.toggle('active')"><i class="fa-regular fa-thumbs-down"></i></button>
+        <button class="msg-action-btn" title="Copy" onclick="copyMsgText(this)"><i class="fa-regular fa-copy"></i></button>
+      </div>
+    </div>
+  `;
+  container.appendChild(wrapper);
+}
+
+function copyMsgText(btn) {
+  const msgBody = btn.closest('.msg').querySelector('.msg-body');
+  if (msgBody) {
+    navigator.clipboard.writeText(msgBody.textContent.trim()).then(() => {
+      btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+      btn.classList.add('active');
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fa-regular fa-copy"></i>';
+        btn.classList.remove('active');
+      }, 1500);
+    });
+  }
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function formatTime(timeStr) {
+  const [h, m] = timeStr.split(':').map(Number);
+  const ampm = h >= 12 ? 'pm' : 'am';
+  const hour = h % 12 || 12;
+  return m === 0 ? `${hour}:00${ampm}` : `${hour}:${String(m).padStart(2,'0')}${ampm}`;
+}
+
+function renderFollowUpInput(container, chatContainer, followUp, onSubmit) {
+  const inputType = followUp.inputType || 'chips';
+
+  if (inputType === 'date') {
+    const area = document.createElement('div');
+    area.className = 'followup-input-area';
+    area.innerHTML = `
+      <div class="followup-field">
+        <label>Date</label>
+        <input type="date" value="${followUp.prefill || ''}" />
+      </div>
+      <button class="followup-submit">→</button>
+    `;
+    container.appendChild(area);
+    area.querySelector('.followup-submit').addEventListener('click', () => {
+      const val = area.querySelector('input').value;
+      if (!val) return;
+      onSubmit(formatDate(val));
+    });
+    area.querySelector('input').addEventListener('keydown', (e) => {
+      if (e.code === 'Enter') { e.preventDefault(); area.querySelector('.followup-submit').click(); }
+    });
+
+  } else if (inputType === 'time') {
+    const area = document.createElement('div');
+    area.className = 'followup-row';
+    const prefill = followUp.prefill || { start: '', end: '' };
+    area.innerHTML = `
+      <div class="followup-field time">
+        <label>Start time</label>
+        <input type="time" value="${prefill.start || ''}" />
+      </div>
+      <div class="followup-field time">
+        <label>End time</label>
+        <input type="time" value="${prefill.end || ''}" />
+      </div>
+      <button class="followup-submit">→</button>
+    `;
+    container.appendChild(area);
+    area.querySelector('.followup-submit').addEventListener('click', () => {
+      const inputs = area.querySelectorAll('input');
+      const start = inputs[0].value;
+      const end = inputs[1].value;
+      if (!start || !end) return;
+      onSubmit(`${formatTime(start)} – ${formatTime(end)}`);
+    });
+  }
+}
+
+function renderOtherInput(container, chatContainer, otherType, otherPrefill, onSubmit) {
+  if (otherType === 'date') {
+    const area = document.createElement('div');
+    area.className = 'followup-input-area';
+    area.innerHTML = `
+      <div class="followup-field">
+        <label>Date</label>
+        <input type="date" value="${otherPrefill || ''}" />
+      </div>
+      <button class="followup-submit">→</button>
+    `;
+    container.appendChild(area);
+    area.querySelector('.followup-submit').addEventListener('click', () => {
+      const val = area.querySelector('input').value;
+      if (!val) return;
+      onSubmit(formatDate(val));
+    });
+    area.querySelector('input').addEventListener('keydown', (e) => {
+      if (e.code === 'Enter') { e.preventDefault(); area.querySelector('.followup-submit').click(); }
+    });
+
+  } else if (otherType === 'time') {
+    const area = document.createElement('div');
+    area.className = 'followup-row';
+    const prefill = otherPrefill || { start: '', end: '' };
+    area.innerHTML = `
+      <div class="followup-field time">
+        <label>Start time</label>
+        <input type="time" value="${prefill.start || ''}" />
+      </div>
+      <div class="followup-field time">
+        <label>End time</label>
+        <input type="time" value="${prefill.end || ''}" />
+      </div>
+      <button class="followup-submit">→</button>
+    `;
+    container.appendChild(area);
+    area.querySelector('.followup-submit').addEventListener('click', () => {
+      const inputs = area.querySelectorAll('input');
+      const start = inputs[0].value;
+      const end = inputs[1].value;
+      if (!start || !end) return;
+      onSubmit(`${formatTime(start)} – ${formatTime(end)}`);
+    });
+
+  } else {
+    // Default: text input via chat input area
+    setInputState('typed', otherPrefill || '');
+    window._chipSubmitOverride = () => {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+      onSubmit(text);
+      window._chipSubmitOverride = null;
+    };
+  }
+}
+
+function appendChips(container, step) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'msg ava';
+
+  let chipsHtml = step.items.map((item, idx) =>
+    `<div class="chip default" data-idx="${idx}">${item.text}</div>`
+  ).join('');
+
+  if (step.showOther) {
+    chipsHtml += `<div class="chip other" data-other="true">Other...</div>`;
+  }
+
+  wrapper.innerHTML = `
+    <div class="msg-avatar">E</div>
+    <div class="msg-content" style="display:flex;flex-direction:column;gap:8px;">
+      <div class="msg-body">${step.text}</div>
+      <div class="chips">${chipsHtml}</div>
+    </div>
+  `;
+  container.appendChild(wrapper);
+
+  const chipsContainer = wrapper.querySelector('.chips');
+  const msgContent = wrapper.querySelector('.msg-content');
+
+  function dimAllChips() {
+    chipsContainer.querySelectorAll('.chip').forEach(c => {
+      c.classList.remove('default', 'other');
+      c.classList.add('dimmed');
+      c.style.pointerEvents = 'none';
+    });
+  }
+
+  function advanceAfterResponse(responseText) {
+    appendUserMsg(container, responseText);
+    setInputState('idle');
+    scrollChat();
+    currentStep++;
+    setTimeout(() => { runStep(); }, 400);
+  }
+
+  // Chip click handlers
+  chipsContainer.querySelectorAll('.chip.default').forEach(chipEl => {
+    chipEl.addEventListener('click', () => {
+      const idx = parseInt(chipEl.dataset.idx);
+      const item = step.items[idx];
+
+      dimAllChips();
+      chipEl.classList.remove('dimmed');
+      chipEl.classList.add('selected');
+
+      // Check for follow-up
+      if (item.followUp) {
+        // Show user message for this chip
+        setTimeout(() => {
+          appendUserMsg(container, item.response);
+          scrollChat();
+
+          // Show typing then follow-up question
+          showTyping(container, () => {
+            const followUpWrapper = document.createElement('div');
+            followUpWrapper.className = 'msg ava';
+            followUpWrapper.innerHTML = `
+              <div class="msg-avatar">E</div>
+              <div class="msg-content" style="display:flex;flex-direction:column;gap:8px;">
+                <div class="msg-body">${item.followUp.text}</div>
+              </div>
+            `;
+            container.appendChild(followUpWrapper);
+
+            const followUpContent = followUpWrapper.querySelector('.msg-content');
+
+            if (item.followUp.inputType === 'chips') {
+              // Render follow-up as chips
+              const fuChips = document.createElement('div');
+              fuChips.className = 'chips';
+              fuChips.innerHTML = item.followUp.items.map((fi, fi_idx) =>
+                `<div class="chip default" data-fu-idx="${fi_idx}">${fi.text}</div>`
+              ).join('') + (item.followUp.showOther ? `<div class="chip other" data-fu-other="true">Other...</div>` : '');
+              followUpContent.appendChild(fuChips);
+
+              fuChips.querySelectorAll('.chip.default').forEach(fuChipEl => {
+                fuChipEl.addEventListener('click', () => {
+                  const fuIdx = parseInt(fuChipEl.dataset.fuIdx);
+                  fuChips.querySelectorAll('.chip').forEach(c => { c.classList.remove('default','other'); c.classList.add('dimmed'); c.style.pointerEvents='none'; });
+                  fuChipEl.classList.remove('dimmed'); fuChipEl.classList.add('selected');
+                  setTimeout(() => { advanceAfterResponse(item.followUp.items[fuIdx].response); }, 200);
+                });
+              });
+            } else {
+              // Render date/time input
+              renderFollowUpInput(followUpContent, container, item.followUp, (formattedValue) => {
+                advanceAfterResponse(formattedValue);
+              });
+            }
+
+            scrollChat();
+          });
+        }, 200);
+      } else {
+        // No follow-up — standard advance
+        setTimeout(() => { advanceAfterResponse(item.response); }, 200);
+      }
+    });
+  });
+
+  // "Other..." chip handler
+  if (step.showOther) {
+    const otherChip = chipsContainer.querySelector('[data-other]');
+    otherChip.addEventListener('click', () => {
+      dimAllChips();
+      otherChip.classList.remove('dimmed', 'other');
+      otherChip.classList.add('selected');
+      otherChip.style.pointerEvents = 'none';
+
+      const otherType = step.otherType || 'text';
+      const otherPrefill = step.otherPrefill || step.response || '';
+
+      renderOtherInput(msgContent, container, otherType, otherPrefill, (formattedValue) => {
+        advanceAfterResponse(formattedValue);
+      });
+    });
+  }
+
+  scrollChat();
+}
+
+function appendConfirmCard(container, step) {
+  const el = document.createElement('div');
+  el.className = 'confirm-card done';
+  el.innerHTML = `
+    <div class="confirm-card-header">
+      <span class="card-icon">${step.icon || '📋'}</span>
+      <h3>${step.title}</h3>
+    </div>
+    <div class="confirm-card-body">
+      ${step.rows.map(r => `
+        <div class="confirm-card-row">
+          <span class="label">${r.label}</span>
+          <span class="value">${r.value}</span>
         </div>
-    </header>
+      `).join('')}
+    </div>
+    <div class="confirm-card-reasoning" style="padding:8px 16px;font-size:12px;color:var(--level-l3-text);background:var(--level-l3-bg);border-top:1px solid var(--level-l3-border);display:flex;align-items:flex-start;gap:6px;">
+      <i class="fa-regular fa-lightbulb" style="margin-top:1px;"></i>
+      <span>${step.reasoning || 'Based on the details you provided, this looks ready to create.'}</span>
+    </div>
+    <div class="confirm-card-actions">
+      <button class="card-btn cancel">Cancel</button>
+      <button class="card-btn confirm">Confirm</button>
+    </div>
+  `;
+  container.appendChild(el);
+  scrollChat();
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Design System -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">Design System</h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="bg-white rounded-xl p-6 border-l-4 border-blue-500 shadow-sm">
-                    <div class="flex items-center space-x-3 mb-3">
-                        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                            <i class="fas fa-eye text-blue-600 text-sm"></i>
-                        </div>
-                        <h3 class="font-semibold text-gray-900">Level 1</h3>
-                    </div>
-                    <p class="text-sm text-gray-600 mb-3">Watch & Surface</p>
-                    <p class="text-xs text-gray-400">Observations, insights, alerts</p>
-                </div>
+  el.querySelector('.card-btn.confirm').addEventListener('click', () => {
+    finishCardAction(
+      el.querySelector('.card-btn.confirm'),
+      'Creating...', '✓ Created',
+      '✓ Confirmed', step
+    );
+  });
+}
 
-                <div class="bg-white rounded-xl p-6 border-l-4 border-amber-500 shadow-sm">
-                    <div class="flex items-center space-x-3 mb-3">
-                        <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center">
-                            <i class="fas fa-hand-paper text-amber-600 text-sm"></i>
-                        </div>
-                        <h3 class="font-semibold text-gray-900">Level 2</h3>
-                    </div>
-                    <p class="text-sm text-gray-600 mb-3">Suggest & Draft</p>
-                    <p class="text-xs text-gray-400">Drafts waiting approval</p>
-                </div>
+function appendGateCard(container, step) {
+  const el = document.createElement('div');
+  el.className = 'confirm-card review';
+  const btnText = step.buttonText || 'Confirm';
+  const btnClass = btnText.toLowerCase() === 'publish' ? 'publish' :
+                   btnText.toLowerCase() === 'send' ? 'send' :
+                   btnText.toLowerCase() === 'close now' ? 'publish' : 'publish';
+  el.innerHTML = `
+    <div class="confirm-card-header">
+      <span class="card-icon">${step.icon || '🌐'}</span>
+      <h3>${step.title}</h3>
+    </div>
+    <div class="confirm-card-body">
+      ${step.rows.map(r => `
+        <div class="confirm-card-row">
+          <span class="label">${r.label}</span>
+          <span class="value">${r.value}</span>
+        </div>
+      `).join('')}
+    </div>
+    ${step.warning ? `
+      <div class="confirm-card-warning">
+        <span>⚠</span>
+        <span>${step.warning}</span>
+      </div>
+    ` : ''}
+    <div class="confirm-card-reasoning" style="padding:8px 16px;font-size:12px;color:var(--level-l2-text);background:var(--level-l2-bg);border-top:1px solid var(--level-l2-border);display:flex;align-items:flex-start;gap:6px;">
+      <i class="fa-regular fa-lightbulb" style="margin-top:1px;"></i>
+      <span>${step.reasoning || 'This action will be visible to families. Please review before confirming.'}</span>
+    </div>
+    <div class="confirm-card-actions">
+      <button class="card-btn cancel">Cancel</button>
+      <button class="card-btn ${btnClass}">${btnText}</button>
+    </div>
+  `;
+  container.appendChild(el);
+  scrollChat();
 
-                <div class="bg-white rounded-xl p-6 border-l-4 border-green-500 shadow-sm">
-                    <div class="flex items-center space-x-3 mb-3">
-                        <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                            <i class="fas fa-check-circle text-green-600 text-sm"></i>
-                        </div>
-                        <h3 class="font-semibold text-gray-900">Level 3</h3>
-                    </div>
-                    <p class="text-sm text-gray-600 mb-3">Act & Report</p>
-                    <p class="text-xs text-gray-400">Internal actions, reports</p>
-                </div>
+  const primaryBtn = el.querySelector(`.card-btn.${btnClass}`);
+  const workingText = btnText === 'Publish' ? 'Publishing...' :
+                      btnText === 'Send' ? 'Sending...' :
+                      btnText === 'Close Now' ? 'Closing...' : 'Working...';
+  const doneText = btnText === 'Publish' ? '✓ Published' :
+                   btnText === 'Send' ? '✓ Sent' :
+                   btnText === 'Close Now' ? '✓ Closed' : '✓ Done';
+  const userMsg = btnText === 'Publish' ? '✓ Published' :
+                  btnText === 'Send' ? '✓ Sent' :
+                  btnText === 'Close Now' ? '✓ Closed' : '✓ Confirmed';
 
-                <div class="bg-white rounded-xl p-6 border-l-4 border-purple-500 shadow-sm">
-                    <div class="flex items-center space-x-3 mb-3">
-                        <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-                            <i class="fas fa-bolt text-purple-600 text-sm"></i>
-                        </div>
-                        <h3 class="font-semibold text-gray-900">Level 4</h3>
-                    </div>
-                    <p class="text-sm text-gray-600 mb-3">Autonomous</p>
-                    <p class="text-xs text-gray-400">Fully automatic, routine</p>
-                </div>
-            </div>
-        </section>
+  primaryBtn.addEventListener('click', () => {
+    finishCardAction(primaryBtn, workingText, doneText, userMsg, step);
+  });
+}
 
-        <!-- L1: Watch -->
-        <section class="mb-12">
-            <div class="flex items-center space-x-3 mb-6">
-                <span class="px-4 py-2 rounded-full text-sm font-bold bg-blue-100 text-blue-700">L1</span>
-                <h2 class="text-2xl font-bold text-gray-900">Watch & Surface</h2>
-            </div>
+function appendEmailDraft(container, step) {
+  const el = document.createElement('div');
+  el.className = 'confirm-card review';
+  el.innerHTML = `
+    <div class="confirm-card-header">
+      <span class="card-icon">✉</span>
+      <h3>${step.title}</h3>
+    </div>
+    <div class="confirm-card-body">
+      <div class="confirm-card-row">
+        <span class="label">To</span>
+        <span class="value">${step.to}</span>
+      </div>
+      <div class="confirm-card-row">
+        <span class="label">Subject</span>
+        <span class="value">${step.subject}</span>
+      </div>
+      <div class="email-body-preview">${step.body.replace(/\n/g, '<br>')}</div>
+    </div>
+    ${step.warning ? `
+      <div class="confirm-card-warning">
+        <span>⚠</span>
+        <span>${step.warning}</span>
+      </div>
+    ` : ''}
+    <div class="confirm-card-reasoning" style="padding:8px 16px;font-size:12px;color:var(--level-l2-text);background:var(--level-l2-bg);border-top:1px solid var(--level-l2-border);display:flex;align-items:flex-start;gap:6px;">
+      <i class="fa-regular fa-lightbulb" style="margin-top:1px;"></i>
+      <span>${step.reasoning || 'This email will be sent to families. Review the content before sending.'}</span>
+    </div>
+    <div class="confirm-card-actions">
+      <button class="card-btn cancel">Cancel</button>
+      <button class="card-btn cancel">Edit</button>
+      <button class="card-btn send">Send</button>
+    </div>
+  `;
+  container.appendChild(el);
+  scrollChat();
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                    <div class="bg-blue-50 px-6 py-4 border-b border-blue-100">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <i class="fas fa-chart-line text-blue-600"></i>
-                                <span class="font-semibold text-blue-900">Insight: Registration Pace</span>
-                            </div>
-                            <span class="text-xs text-blue-600">09:23</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <p class="text-gray-700 mb-4">Your Year 7 Open Evening is in <strong>10 days</strong> with only <strong>90 of 200</strong> spots filled (45% capacity).</p>
-                        <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                            <p class="text-sm font-medium text-gray-700 mb-2">Context</p>
-                            <ul class="text-sm text-gray-600 space-y-1">
-                                <li>- Last year's Open Evening had <strong>165 registrations</strong> by now</li>
-                                <li>- Similar events typically reach 70% capacity</li>
-                            </ul>
-                        </div>
-                        <div class="flex flex-wrap gap-2">
-                            <button class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg">Draft reminder</button>
-                            <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-lg">View event</button>
-                            <button class="px-4 py-2 bg-white border border-gray-300 text-gray-500 text-sm rounded-lg">Dismiss</button>
-                        </div>
-                    </div>
-                </div>
+  el.querySelector('.card-btn.send').addEventListener('click', () => {
+    finishCardAction(
+      el.querySelector('.card-btn.send'),
+      'Sending...', '✓ Sent',
+      '✓ Sent', step
+    );
+  });
+}
 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                    <div class="bg-blue-50 px-6 py-4 border-b border-blue-100">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <i class="fas fa-lightbulb text-blue-600"></i>
-                                <span class="font-semibold text-blue-900">Insight from Agent</span>
-                            </div>
-                            <span class="text-xs text-blue-600">09:15</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <p class="text-gray-700 mb-4">Registration is <strong>26% below last year's trend</strong></p>
-                        <div class="overflow-hidden rounded-lg border border-gray-200 mb-4">
-                            <table class="w-full text-sm">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-4 py-2 text-left">Metric</th>
-                                        <th class="px-4 py-2 text-right">This Year</th>
-                                        <th class="px-4 py-2 text-right">Last Year</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="border-t border-gray-200">
-                                        <td class="px-4 py-2">Registered</td>
-                                        <td class="px-4 py-2 text-right font-medium">156</td>
-                                        <td class="px-4 py-2 text-right text-gray-500">210</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg">See comparison</button>
-                            <button class="px-4 py-2 bg-white border border-gray-300 text-gray-500 text-sm rounded-lg">Why?</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+function appendTimeDivider(container, label) {
+  const el = document.createElement('div');
+  el.className = 'time-divider';
+  el.innerHTML = `
+    <div class="line"></div>
+    <div class="label">⏳ ${label}</div>
+    <div class="line"></div>
+  `;
+  container.appendChild(el);
+}
 
-        <!-- L2: Suggest -->
-        <section class="mb-12">
-            <div class="flex items-center space-x-3 mb-6">
-                <span class="px-4 py-2 rounded-full text-sm font-bold bg-amber-100 text-amber-700">L2</span>
-                <h2 class="text-2xl font-bold text-gray-900">Suggest & Draft</h2>
-            </div>
+function appendAlert(container, step) {
+  const el = document.createElement('div');
+  el.className = `alert-card ${step.level}`;
+  const isCompact = step.level === 'auto';
 
-            <div class="bg-white rounded-xl shadow-lg border border-amber-200 max-w-4xl">
-                <div class="bg-amber-50 px-6 py-4 border-b border-amber-200 flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <i class="fas fa-comment-dots text-amber-600"></i>
-                        <span class="font-semibold text-amber-900">Suggestion from Agent</span>
-                        <span class="text-amber-700">- Draft reminder email</span>
-                    </div>
-                    <div class="flex space-x-2">
-                        <button class="text-amber-600 hover:text-amber-700 text-sm">Skip</button>
-                    </div>
-                </div>
-                
-                <div class="p-6">
-                    <p class="text-gray-600 text-sm mb-4">Your Open Evening is in <strong>2 days</strong> (Oct 15, 6-8pm). <strong>160 families</strong> are registered.</p>
+  el.innerHTML = `
+    <div class="alert-title">
+      <h4>${step.title}</h4>
+    </div>
+    <p class="${isCompact ? '' : 'alert-text'}" style="${isCompact ? 'font-size:13px;color:var(--gray-500);line-height:1.4;' : ''}">${step.text}</p>
+    ${(!isCompact && step.why) ? `
+      <div class="alert-why"><strong>Why:</strong> ${step.why}</div>
+    ` : ''}
+    ${step.actions ? `
+      <div class="alert-actions">
+        ${step.actions.map((a, i) => {
+          const isLast = (i === step.actions.length - 1) && (a.toLowerCase() === 'dismiss' || a.toLowerCase() === 'skip');
+          const isPrimary = step.primaryAction && a === step.primaryAction;
+          return `<button class="alert-btn ${isLast ? 'dismiss' : ''} ${isPrimary ? 'primary' : ''}">${a}</button>`;
+        }).join('')}
+      </div>
+    ` : ''}
+  `;
+  container.appendChild(el);
 
-                    <div class="bg-gray-50 rounded-lg border border-gray-200 p-4 mb-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-sm font-medium text-gray-700">To: 160 registered families</span>
-                            <span class="text-xs text-gray-500">Subject: Reminder: Year 7 Open Evening Tomorrow</span>
-                        </div>
-                        <div class="bg-white rounded p-3 text-sm text-gray-600 border border-gray-200">
-                            <p class="mb-2">Dear {{First Name}},</p>
-                            <p class="mb-2">We're looking forward to seeing you tomorrow at our Year 7 Open Evening!</p>
-                            <p class="mb-1"><strong>Date:</strong> Thursday 15 October</p>
-                            <p class="mb-1"><strong>Time:</strong> 6:00 PM - 8:00 PM</p>
-                            <p class="mb-2"><strong>Location:</strong> Main Hall</p>
-                            <p>Please arrive 10 minutes early.</p>
-                        </div>
-                    </div>
+  if (step.level === 'review' && step.actions) {
+    el.querySelectorAll('.alert-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const actionText = btn.textContent.trim();
+        el.querySelectorAll('.alert-btn').forEach(b => {
+          b.disabled = true;
+          b.style.opacity = '0.4';
+          b.style.pointerEvents = 'none';
+        });
+        btn.style.opacity = '1';
 
-                    <div class="bg-amber-50 rounded-lg p-3 mb-4 border border-amber-200">
-                        <p class="text-sm text-amber-800"><i class="fas fa-info-circle mr-2"></i><strong>Confidence: 94%</strong> - Similar to 3 previous reminders you approved without edits</p>
-                    </div>
+        setTimeout(() => {
+          appendUserMsg(container, actionText);
+          setInputState('idle');
+          scrollChat();
+          currentStep++;
+          setTimeout(() => { runStep(); }, 300);
+        }, 200);
+      });
+    });
+  }
+}
 
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <label class="flex items-center space-x-2 text-sm text-gray-600">
-                                <input type="radio" name="send_time" checked>
-                                <span>Tomorrow at 9am</span>
-                            </label>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-lg">Edit message</button>
-                            <button class="px-4 py-2 bg-amber-600 text-white text-sm rounded-lg">Send to 160 families</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+function appendProgressBlock(container, steps, callback) {
+  const block = document.createElement('div');
+  block.className = 'progress-block';
+  container.appendChild(block);
+  scrollChat();
 
-        <!-- L3: Act -->
-        <section class="mb-12">
-            <div class="flex items-center space-x-3 mb-6">
-                <span class="px-4 py-2 rounded-full text-sm font-bold bg-green-100 text-green-700">L3</span>
-                <h2 class="text-2xl font-bold text-gray-900">Act & Report</h2>
-            </div>
+  let i = 0;
+  function showNext() {
+    if (i >= steps.length) {
+      setTimeout(() => { if (callback) callback(); }, 300);
+      return;
+    }
+    const s = steps[i];
+    const stepEl = document.createElement('div');
+    stepEl.className = 'progress-step';
+    stepEl.innerHTML = `
+      <div class="progress-dot done">✓</div>
+      <span class="${s.result ? 'step-result' : 'step-text'}">${s.result || s.text}</span>
+    `;
+    block.appendChild(stepEl);
+    scrollChat();
+    i++;
+    setTimeout(showNext, 400 + Math.random() * 300);
+  }
+  showNext();
+}
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                    <div class="bg-green-50 px-6 py-4 border-b border-green-100">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <i class="fas fa-check-circle text-green-600"></i>
-                                <span class="font-semibold text-green-900">Done: Event Draft Created</span>
-                            </div>
-                            <button class="text-green-600 hover:text-green-700 text-sm">Undo</button>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <p class="text-gray-700 mb-4">I've created a draft event based on your request:</p>
-                        <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                            <div class="grid grid-cols-2 gap-4 text-sm">
-                                <div><span class="text-gray-500">Name:</span> <span class="font-medium ml-2">Year 7 Open Evening</span></div>
-                                <div><span class="text-gray-500">Date:</span> <span class="font-medium ml-2">Tuesday 15 October 2026</span></div>
-                                <div><span class="text-gray-500">Time:</span> <span class="font-medium ml-2">6:00 PM - 8:00 PM</span></div>
-                                <div><span class="text-gray-500">Capacity:</span> <span class="font-medium ml-2">200 places</span></div>
-                            </div>
-                            <div class="mt-3 pt-3 border-t border-gray-200">
-                                <span class="text-red-600 text-sm font-medium">Status: DRAFT (only you can see this)</span>
-                            </div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-lg">Edit details</button>
-                            <button class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg">Publish event</button>
-                        </div>
-                    </div>
-                </div>
+// ═══════════════════════════════════════════════════
+//  ACTIVITY FEED
+// ═══════════════════════════════════════════════════
+function addFeedItem(feed) {
+  document.getElementById('feedEmpty').style.display = 'none';
 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                    <div class="bg-green-50 px-6 py-4 border-b border-green-100">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <i class="fas fa-file-alt text-green-600"></i>
-                                <span class="font-semibold text-green-900">Report: Attendance Analysis</span>
-                            </div>
-                            <button class="text-green-600 hover:text-green-700 text-sm">Download CSV</button>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <p class="text-gray-700 mb-4">Generated for Year 7 Open Evening (15 Oct 2026):</
-                        <div class="overflow-hidden rounded-lg border border-gray-200 mb-4">
-                            <table class="w-full text-sm">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-4 py-2 text-left">Year Group</th>
-                                        <th class="px-4 py-2 text-right">Registered</th>
-                                        <th class="px-4 py-2 text-right">Attended</th>
-                                        <th class="px-4 py-2 text-right">No-show</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="border-t border-gray-200">
-                                        <td class="px-4 py-2">Year 7</td>
-                                        <td class="px-4 py-2 text-right">142</td>
-                                        <td class="px-4 py-2 text-right">124</td>
-                                        <td class="px-4 py-2 text-right text-red-600">12.7%</td>
-                                    </tr>
-                                    <tr class="border-t border-gray-200">
-                                        <td class="px-4 py-2">Year 8</td>
-                                        <td class="px-4 py-2 text-right">38</td>
-                                        <td class="px-4 py-2 text-right">29</td>
-                                        <td class="px-4 py-2 text-right text-red-600">23.7%</td>
-                                    </tr>
-                                    <tr class="border-t border-gray-200 bg-gray-50">
-                                        <td class="px-4 py-2 font-medium">Total</td>
-                                        <td class="px-4 py-2 text-right font-medium">198</td>
-                                        <td class="px-4 py-2 text-right font-medium">167</td>
-                                        <td class="px-4 py-2 text-right font-medium text-red-600">15.7%</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg">View conversion tracking</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+  const feedContent = document.getElementById('feedContent');
+  const el = document.createElement('div');
+  el.className = `feed-item ${feed.level}`;
 
-        <!-- L4: Autonomous -->
-        <section class="mb-12">
-            <div class="flex items-center space-x-3 mb-6">
-                <span class="px-4 py-2 rounded-full text-sm font-bold bg-purple-100 text-purple-700">L4</span>
-                <h2 class="text-2xl font-bold text-gray-900">Autonomous</h2>
-            </div>
+  const tagLabels = { insight: 'Insight', review: 'Review', done: 'Done', auto: 'Auto' };
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                    <div class="bg-purple-50 px-6 py-4 border-b border-purple-100">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <i class="fas fa-paper-plane text-purple-600"></i>
-                                <span class="font-semibold text-purple-900">Auto-sent: 3 Registration Confirmations</span>
-                            </div>
-                            <span class="text-xs text-purple-600">Today</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <div class="space-y-3 mb-4">
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="text-gray-700">Sarah Johnson</span>
-                                <span class="text-gray-500">09:23</span>
-                            </div>
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="text-gray-700">Marcus Chen</span>
-                                <span class="text-gray-500">09:45</span>
-                            </div>
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="text-gray-700">Priya Patel</span>
-                                <span class="text-gray-500">10:12</span>
-                            </div>
-                        </div>
-                        <div class="bg-purple-50 rounded-lg p-3 border border-purple-200">
-                            <p class="text-sm text-purple-800"><i class="fas fa-robot mr-2"></i><strong>Why automatic:</strong> You enabled auto-send on Sep 1. 47 confirmations sent since then, 0 issues.</p>
-                        </div>
-                        <div class="mt-4 flex gap-2">
-                            <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-lg">View all 47</button>
-                            <button class="px-4 py-2 bg-white border border-gray-300 text-gray-500 text-sm rounded-lg">Change settings</button>
-                        </div>
-                    </div>
-                </div>
+  el.innerHTML = `
+    <div class="feed-item-header">
+      <span class="feed-tag ${feed.level}">${tagLabels[feed.level]}</span>
+      <span class="feed-item-title">${feed.title}</span>
+      ${feed.status ? `<span class="feed-item-status">${feed.status}</span>` : ''}
+    </div>
+    <p class="feed-item-desc">${feed.desc}</p>
+  `;
+  feedContent.appendChild(el);
 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                    <div class="bg-purple-50 px-6 py-4 border-b border-purple-100">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <i class="fas fa-arrow-up text-purple-600"></i>
-                                <span class="font-semibold text-purple-900">Auto-promoted: Waitlist to Confirmed</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <p class="text-gray-700 mb-4">A cancellation freed up a spot. I've automatically promoted the next family:</p>
-                        <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                            <div class="space-y-2 text-sm">
-                                <div class="flex justify-between"><span class="text-gray-500">Family:</span> <span class="font-medium">Jones Family</span></div>
-                                <div class="flex justify-between"><span class="text-gray-500">Position:</span> <span class="font-medium text-green-600">#3 - PROMOTED</span></div>
-                                <div class="flex justify-between"><span class="text-gray-500">Status:</span> <span class="font-medium">Confirmed</span></div>
-                                <div class="flex justify-between"><span class="text-gray-500">Email opened:</span> <span class="font-medium text-green-600">3 minutes <i class="fas fa-check"></i></span></div>
-                            </div>
-                        </div>
-                        <div class="bg-purple-50 rounded-lg p-3 border border-purple-200">
-                            <p class="text-sm text-purple-800"><i class="fas fa-robot mr-2"></i><strong>Why automatic:</strong> You enabled auto-promotion on Oct 1 after 12 successful manual promotions.</p>
-                        </div>
-                        <div class="mt-4 flex gap-2">
-                            <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-lg">View settings</button>
-                            <button class="px-4 py-2 bg-white border border-gray-300 text-red-600 text-sm rounded-lg">Move back to waitlist</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+  feedItems.push(feed);
+  document.getElementById('feedCount').textContent = feedItems.length;
+}
 
-        <!-- Activity Feed -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">Activity Feed</h2>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                    <h3 class="font-semibold text-gray-900">Today's Activity</h3>
-                    <div class="flex space-x-2">
-                        <button class="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-700">All</button>
-                        <button class="px-3 py-1 text-xs rounded-full bg-gray-100 text-gray-600">Needs Action</button>
-                        <button class="px-3 py-1 text-xs rounded-full bg-gray-100 text-gray-600">Completed</button>
-                    </div>
-                </div>
-                <div class="divide-y divide-gray-200">
-                    <div class="px-6 py-4 flex items-start space-x-4 hover:bg-gray-50">
-                        <div class="w-2 h-2 rounded-full bg-amber-500 mt-2"></div>
-                        <div class="flex-1">
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="text-sm font-medium text-gray-900">Draft reminder email for Open Evening</span>
-                                <span class="text-xs text-gray-500">09:45</span>
-                            </div>
-                            <p class="text-sm text-gray-600 mb-2">160 families registered - awaiting your approval</p>
-                            <div class="flex space-x-2">
-                                <button class="px-3 py-1 text-xs bg-amber-600 text-white rounded">Review</button>
-                                <button class="px-3 py-1 text-xs border border-gray-300 text-gray-600 rounded">Remind later</button>
-                            </div>
-                        </div>
-                        <span class="px-2 py-1 text-xs rounded-full bg-amber-100 text-amber-700">L2</span>
-                    </div>
-                    <div class="px-6 py-4 flex items-start space-x-4 hover:bg-gray-50">
-                        <div class="w-2 h-2 rounded-full bg-blue-500 mt-2"></div>
-                        <div class="flex-1">
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="text-sm font-medium text-gray-900">Registration pace slowing</span>
-                                <span class="text-xs text-gray-500">09:23</span>
-                            </div>
-                            <p class="text-sm text-gray-600">45% capacity with 10 days remaining (vs 70% typical)</p>
-                        </div>
-                        <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-700">L1</span>
-                    </div>
-                    <div class="px-6 py-4 flex items-start space-x-4 hover:bg-gray-50">
-                        <div class="w-2 h-2 rounded-full bg-green-500 mt-2"></div>
-                        <div class="flex-1">
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="text-sm font-medium text-gray-900">Event draft created</span>
-                                <span class="text-xs text-gray-500">08:30</span>
-                            </div>
-                            <p class="text-sm text-gray-600">Year 7 Open Evening - ready for review</p>
-                        </div>
-                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700">L3</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+// ═══════════════════════════════════════════════════
+//  PROGRESS CHECKLIST
+// ═══════════════════════════════════════════════════
+function renderPhaseChecklist() {
+  const s = scenarios[currentScenario];
+  const el = document.getElementById('progressChecklist');
 
-        <!-- Footer -->
-        <footer class="mt-12 pt-8 border-t border-gray-200">
-            <p class="text-center text-sm text-gray-500">Events Agent UI/UX Reference Guide</p>
-        </footer>
-    </main>
+  if (!s.phases || s.phases.length === 0) {
+    el.style.display = 'none';
+    return;
+  }
+
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="progress-title">${s.title}</div>
+    ${s.phases.map((phase, i) => `
+      <div class="phase-item" data-phase="${i}">
+        <div class="phase-dot upcoming"></div>
+        <span class="phase-label upcoming">${phase.label}</span>
+      </div>
+    `).join('')}
+  `;
+
+  updatePhaseChecklist();
+}
+
+function updatePhaseChecklist() {
+  const s = scenarios[currentScenario];
+  if (!s.phases || s.phases.length === 0) return;
+
+  const el = document.getElementById('progressChecklist');
+  const phaseItems = el.querySelectorAll('.phase-item');
+
+  s.phases.forEach((phase, i) => {
+    const item = phaseItems[i];
+    if (!item) return;
+
+    const dot = item.querySelector('.phase-dot');
+    const label = item.querySelector('.phase-label');
+    const nextStart = (i + 1 < s.phases.length) ? s.phases[i + 1].startsAt : Infinity;
+
+    dot.className = 'phase-dot';
+    label.className = 'phase-label';
+
+    if (currentStep >= nextStart) {
+      dot.classList.add('done');
+      dot.textContent = '✓';
+      label.classList.add('done');
+    } else if (currentStep >= phase.startsAt) {
+      dot.classList.add('active');
+      dot.textContent = '●';
+      label.classList.add('active');
+    } else {
+      dot.classList.add('upcoming');
+      dot.textContent = '';
+      label.classList.add('upcoming');
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  THINKING INDICATOR
+// ═══════════════════════════════════════════════════
+function appendThinking(container, steps, callback) {
+  const block = document.createElement('div');
+  block.className = 'thinking-block';
+  block.innerHTML = `
+    <div class="thinking-header" onclick="this.parentElement.classList.toggle('collapsed')">
+      <div class="thinking-icon" style="background:var(--agent-events);color:white;">E</div>
+      <span class="thinking-label">Thinking</span>
+      <div class="thinking-dots"><span></span><span></span><span></span></div>
+      <i class="fa-solid fa-chevron-up thinking-chevron"></i>
+    </div>
+    <div class="thinking-steps"></div>
+  `;
+  container.appendChild(block);
+  scrollChat();
+
+  const stepsContainer = block.querySelector('.thinking-steps');
+  let i = 0;
+
+  function showNextStep() {
+    if (i >= steps.length) {
+      block.classList.add('done');
+      setTimeout(() => {
+        block.classList.add('collapsed');
+        if (callback) callback();
+      }, 400);
+      return;
+    }
+    const s = steps[i];
+    const stepEl = document.createElement('div');
+    stepEl.className = 'thinking-step active';
+    stepEl.innerHTML = `<i class="fa-regular ${s.icon}"></i> ${s.text}`;
+    stepsContainer.appendChild(stepEl);
+    scrollChat();
+    i++;
+    setTimeout(() => {
+      stepEl.classList.remove('active');
+      stepEl.classList.add('done');
+      showNextStep();
+    }, 500 + Math.random() * 400);
+  }
+
+  showNextStep();
+}
+
+function scrollChat() {
+  const el = document.getElementById('chatMessages');
+  setTimeout(() => { el.scrollTop = el.scrollHeight; }, 50);
+}
+
+// ═══════════════════════════════════════════════════
+//  KEYBOARD SHORTCUT
+// ═══════════════════════════════════════════════════
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Enter') {
+    const input = document.getElementById('chatInput');
+    if (!input.disabled && input.value.trim()) {
+      e.preventDefault();
+      submitInput();
+    }
+  }
+  if (e.code === 'ArrowLeft') {
+    e.preventDefault();
+    restartScenario();
+  }
+  const num = parseInt(e.key);
+  if (num >= 1 && num <= scenarios.length) {
+    e.preventDefault();
+    document.getElementById('scenarioSelect').selectedIndex = num - 1;
+    loadScenario(num - 1);
+  }
+});
+
+// INIT
+init();
+</script>
 </body>
 </html>

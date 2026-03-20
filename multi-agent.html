@@ -1,0 +1,2194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emma Events Agent — Multi Agent</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --primary: #263C91;
+  --primary-50: #eef1fa;
+  --primary-100: #d4daf2;
+  --primary-200: #a9b5e5;
+  --primary-700: #1a2a66;
+  --primary-800: #111d4a;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --emerald-50: #ecfdf5;
+  --emerald-100: #d1fae5;
+  --emerald-500: #10b981;
+  --emerald-600: #059669;
+  --emerald-700: #047857;
+  --amber-50: #fffbeb;
+  --amber-100: #fef3c7;
+  --amber-500: #f59e0b;
+  --amber-600: #d97706;
+  --amber-700: #b45309;
+  --red-50: #fef2f2;
+  --red-100: #fee2e2;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  --blue-50: #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --purple-50: #faf5ff;
+  --purple-100: #f3e8ff;
+  --purple-500: #a855f7;
+  --purple-600: #9333ea;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+
+  /* Agent colours (from Lookbook DS) */
+  --agent-events: #3478f7;
+  --agent-events-light: #dfebfe;
+  --agent-enrolment: #ffa940;
+  --agent-enrolment-light: #fff7e6;
+  --agent-leads: #73d13d;
+  --agent-leads-light: #f6ffed;
+  --agent-meetings: #9160e2;
+  --agent-meetings-light: #f9f7fe;
+  --agent-insights: #263c91;
+  --agent-insights-light: #d4dff9;
+
+  /* Autonomy level colours */
+  --level-l1-bg: #dfebfe;
+  --level-l1-border: #c7dcfc;
+  --level-l1-text: #0948cf;
+  --level-l1-color: #3478f7;
+  --level-l2-bg: #fff7e6;
+  --level-l2-border: #ffe7ba;
+  --level-l2-text: #d46b08;
+  --level-l2-color: #ffa940;
+  --level-l3-bg: #f6ffed;
+  --level-l3-border: #d9f7be;
+  --level-l3-text: #389e0d;
+  --level-l3-color: #73d13d;
+  --level-l4-bg: #f9f7fe;
+  --level-l4-border: #e9e1fa;
+  --level-l4-text: #6925cb;
+  --level-l4-color: #9160e2;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: Arial, sans-serif;
+  background: var(--gray-100);
+  color: var(--gray-800);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── TOP BAR ── */
+.top-bar {
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  height: 52px;
+  flex-shrink: 0;
+  gap: 16px;
+}
+.top-bar .logo {
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.top-bar .logo .ava-icon {
+  width: 28px;
+  height: 28px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+.top-bar .separator {
+  width: 1px;
+  height: 24px;
+  background: rgba(255,255,255,0.2);
+}
+
+/* ── SCENARIO TABS ── */
+.scenario-tabs {
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 2px;
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+.scenario-tab {
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gray-500);
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.scenario-tab:hover { color: var(--gray-700); }
+.scenario-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 600;
+}
+.scenario-tab .tab-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: var(--gray-100);
+  font-size: 10px;
+  font-weight: 700;
+  margin-right: 6px;
+  color: var(--gray-500);
+}
+.scenario-tab.active .tab-num {
+  background: var(--primary-100);
+  color: var(--primary);
+}
+
+/* ── MAIN LAYOUT ── */
+.main-layout {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ── CHAT PANEL ── */
+.chat-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-right: 1px solid var(--gray-200);
+  min-width: 0;
+}
+.chat-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.chat-header h2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+.chat-header .pattern-badge {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--primary-50);
+  color: var(--primary);
+}
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.chat-messages::-webkit-scrollbar { width: 5px; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+
+/* Message bubbles */
+.msg { display: flex; gap: 10px; max-width: 85%; animation: msgIn 0.3s ease; }
+.msg.user { align-self: flex-end; flex-direction: row-reverse; }
+.msg-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.msg.ava .msg-avatar { background: var(--agent-events); color: white; border-radius: 50%; }
+.msg.user .msg-avatar { background: var(--emerald-100); color: var(--emerald-700); }
+.msg-body {
+  padding: 10px 14px;
+  border-radius: var(--radius-lg);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--gray-700);
+}
+.msg.ava .msg-body {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+}
+.msg.user .msg-body {
+  background: var(--primary);
+  color: white;
+  border-radius: 16px;
+  border-bottom-right-radius: 4px;
+}
+.msg-body strong { font-weight: 600; }
+.msg-body p + p { margin-top: 8px; }
+
+/* ── PLAN CARD (in chat) ── */
+.plan-card {
+  background: white;
+  border: 1.5px solid var(--primary-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  animation: planIn 0.4s ease;
+  max-width: 420px;
+  flex-shrink: 0;
+}
+.plan-card-header {
+  background: var(--primary-50);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--primary-100);
+}
+.plan-card-header .plan-icon {
+  width: 28px;
+  height: 28px;
+  background: var(--primary);
+  color: white;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+.plan-card-header h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-800);
+}
+.plan-card-header .plan-status {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.plan-status.pending { background: var(--amber-100); color: var(--amber-700); }
+.plan-status.approved { background: var(--emerald-100); color: var(--emerald-700); }
+.plan-card-body { padding: 14px 16px; }
+.plan-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 12.5px;
+  border-bottom: 1px solid var(--gray-100);
+}
+.plan-row:last-child { border-bottom: none; }
+.plan-row .label { color: var(--gray-500); font-weight: 500; }
+.plan-row .value { color: var(--gray-800); font-weight: 600; text-align: right; }
+.plan-card-actions {
+  padding: 12px 16px;
+  border-top: 1px solid var(--gray-200);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.plan-btn {
+  padding: 7px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.plan-btn.approve { background: var(--primary); color: white; }
+.plan-btn.approve:hover { background: var(--primary-700); }
+.plan-btn.edit { background: var(--gray-100); color: var(--gray-700); }
+.plan-btn.edit:hover { background: var(--gray-200); }
+.plan-btn.reject { background: var(--red-50); color: var(--red-600); }
+.plan-btn.reject:hover { background: var(--red-100); }
+
+/* ── OPTIONS CARD (in chat) ── */
+.options-card {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  animation: msgIn 0.3s ease;
+  max-width: 92%;
+  flex-shrink: 0;
+}
+.options-card h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-600);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.option-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  background: white;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.option-item:hover {
+  border-color: var(--primary-200);
+  background: var(--primary-50);
+}
+.option-item.selected {
+  border-color: var(--primary);
+  background: var(--primary-50);
+}
+.option-letter {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--gray-100);
+  color: var(--gray-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.option-item.selected .option-letter {
+  background: var(--primary);
+  color: white;
+}
+.option-text { font-size: 12.5px; line-height: 1.5; color: var(--gray-700); }
+.option-text strong { font-weight: 600; color: var(--gray-800); }
+
+/* ── DATA TABLE (in chat) ── */
+.data-card {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  animation: msgIn 0.3s ease;
+  max-width: 95%;
+  flex-shrink: 0;
+}
+.data-card-header {
+  padding: 12px 16px;
+  background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.data-card-header i { color: var(--primary); font-size: 13px; }
+.data-card-header h4 { font-size: 13px; font-weight: 600; color: var(--gray-800); }
+.data-table {
+  width: 100%;
+  font-size: 12px;
+  border-collapse: collapse;
+}
+.data-table th {
+  text-align: left;
+  padding: 8px 12px;
+  background: var(--gray-50);
+  color: var(--gray-500);
+  font-weight: 600;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-bottom: 1px solid var(--gray-200);
+}
+.data-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--gray-100);
+  color: var(--gray-700);
+}
+.data-table tr:last-child td { border-bottom: none; }
+
+/* Stats row */
+.stats-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+.stat-card {
+  flex: 1;
+  min-width: 80px;
+  padding: 10px 12px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  text-align: center;
+}
+.stat-card .stat-val { font-size: 20px; font-weight: 700; color: var(--gray-800); }
+.stat-card .stat-label { font-size: 10px; color: var(--gray-500); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.3px; }
+
+/* ── DISAMBIGUATION (in chat) ── */
+.disambig-card {
+  background: var(--amber-50);
+  border: 1px solid var(--amber-100);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  animation: msgIn 0.3s ease;
+  flex-shrink: 0;
+  max-width: 92%;
+}
+.disambig-card h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--amber-700);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.disambig-item {
+  padding: 8px 12px;
+  border: 1px solid var(--amber-100);
+  border-radius: var(--radius);
+  background: white;
+  margin-bottom: 6px;
+  cursor: pointer;
+  font-size: 12.5px;
+  color: var(--gray-700);
+  transition: all 0.15s;
+}
+.disambig-item:hover { border-color: var(--primary-200); background: var(--primary-50); }
+.disambig-item.selected { border-color: var(--primary); background: var(--primary-50); }
+.disambig-item .item-meta { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+
+/* Disabled state after selection */
+.options-card.disabled .option-item,
+.disambig-card.disabled .disambig-item { pointer-events: none; opacity: 0.5; }
+.options-card.disabled .option-item.selected,
+.disambig-card.disabled .disambig-item.selected { opacity: 1; }
+
+/* ── CHAT INPUT ── */
+.chat-input-area {
+  padding: 14px 20px;
+  border-top: 1px solid var(--gray-200);
+  flex-shrink: 0;
+}
+.chat-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.chat-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.chat-input:focus { border-color: var(--primary); }
+.chat-input::placeholder { color: var(--gray-400); }
+
+/* ── BOARD PANEL ── */
+.board-panel {
+  width: 380px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--gray-50);
+}
+.board-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--gray-200);
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.board-header h2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-800);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.board-header .task-count {
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--gray-200);
+  color: var(--gray-600);
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+.board-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+.board-column + .board-column { margin-top: 20px; }
+.col-header {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--gray-400);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.col-header .col-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.col-dot.approval { background: var(--amber-500); }
+.col-dot.progress { background: var(--blue-500); }
+.col-dot.done { background: var(--emerald-500); }
+
+/* Task cards on board */
+.task-card {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow-sm);
+  animation: taskIn 0.4s ease;
+  cursor: default;
+}
+.task-card .task-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: 6px;
+}
+.task-card .task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 10px;
+}
+.task-tag {
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.task-tag.type { background: var(--primary-50); color: var(--primary); }
+.task-tag.date { background: var(--blue-50); color: var(--blue-600); }
+.task-tag.capacity { background: var(--emerald-50); color: var(--emerald-600); }
+.task-tag.filter { background: var(--purple-50); color: var(--purple-600); }
+.task-tag.waitlist { background: var(--amber-50); color: var(--amber-600); }
+.task-card .task-progress {
+  margin-top: 8px;
+  height: 3px;
+  background: var(--gray-100);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.task-card .task-progress .bar {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+.task-card.highlight {
+  border-color: var(--primary-200);
+  box-shadow: 0 0 0 3px var(--primary-50), var(--shadow);
+}
+
+/* Board empty state */
+.board-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--gray-400);
+}
+.board-empty i { font-size: 28px; margin-bottom: 10px; display: block; }
+.board-empty p { font-size: 12px; }
+
+/* ── THINKING INDICATOR ── */
+.thinking-block {
+  max-width: 85%;
+  animation: msgIn 0.3s ease;
+  flex-shrink: 0;
+}
+.thinking-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 12px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  user-select: none;
+}
+.thinking-header .thinking-icon {
+  width: 24px;
+  height: 24px;
+  background: var(--primary-100);
+  color: var(--primary);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+.thinking-header .thinking-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-600);
+}
+.thinking-dots {
+  display: flex;
+  gap: 3px;
+  margin-left: 4px;
+}
+.thinking-dots span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gray-400);
+  animation: typingBounce 1.2s infinite;
+}
+.thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+.thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+.thinking-chevron {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--gray-400);
+  transition: transform 0.2s;
+}
+.thinking-block.collapsed .thinking-chevron {
+  transform: rotate(-90deg);
+}
+.thinking-block.collapsed .thinking-steps {
+  display: none;
+}
+.thinking-steps {
+  padding: 8px 12px 8px 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.thinking-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--gray-500);
+  animation: msgIn 0.3s ease;
+}
+.thinking-step i {
+  width: 16px;
+  text-align: center;
+  font-size: 10px;
+  color: var(--primary-200);
+}
+.thinking-step.active i {
+  color: var(--primary);
+}
+.thinking-step.done i {
+  color: var(--emerald-500);
+}
+.thinking-block.done .thinking-dots { display: none; }
+.thinking-block.done .thinking-label::after {
+  content: ' \2713';
+  color: var(--emerald-500);
+}
+
+/* ── SCENARIO INFO BAR ── */
+.scenario-info {
+  padding: 10px 20px;
+  background: var(--primary-50);
+  border-bottom: 1px solid var(--primary-100);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.scenario-info .info-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.scenario-info .info-text {
+  font-size: 12px;
+  color: var(--gray-600);
+  line-height: 1.4;
+}
+.pattern-tags {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.pattern-tag {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  padding: 3px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.pattern-tag.progressive { background: var(--blue-100); color: var(--blue-600); }
+.pattern-tag.plancard { background: var(--primary-100); color: var(--primary); }
+.pattern-tag.board { background: var(--emerald-100); color: var(--emerald-700); }
+.pattern-tag.options { background: var(--purple-100); color: var(--purple-600); }
+.pattern-tag.data { background: var(--amber-100); color: var(--amber-700); }
+.pattern-tag.disambig { background: var(--red-100); color: var(--red-600); }
+
+/* ── TYPING INDICATOR ── */
+.typing-indicator {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  max-width: 85%;
+}
+.typing-dots {
+  padding: 12px 16px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+  display: flex;
+  gap: 4px;
+}
+.typing-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--agent-events);
+  animation: typingBounce 1.5s infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+/* ── STATUS BADGES ── */
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.status-badge.submitted { background: var(--emerald-100); color: var(--emerald-700); }
+.status-badge.started { background: var(--blue-100); color: var(--blue-600); }
+.status-badge.pending { background: var(--amber-100); color: var(--amber-700); }
+.status-badge.confirmed { background: var(--primary-100); color: var(--primary); }
+
+/* ── FILTER DISPLAY ── */
+.filter-display {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  margin-top: 8px;
+}
+.filter-display code {
+  background: var(--gray-100);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--primary);
+}
+
+/* ── PROCESS STEPS ── */
+.process-steps { margin-top: 10px; }
+.process-step {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 8px 0;
+}
+.step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--primary-100);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.step-text { font-size: 12px; color: var(--gray-600); line-height: 1.5; }
+
+/* ── ANIMATIONS ── */
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes planIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes taskIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes typingBounce {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ── SCROLLBAR ── */
+.board-content::-webkit-scrollbar { width: 5px; }
+.board-content::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .board-panel { display: none; }
+  .scenario-info .pattern-tags { display: none; }
+}
+
+/* ── ACTIVITY FEED ── */
+.feed-header { padding: 14px 16px; border-bottom: 1px solid var(--gray-200); background: white; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.feed-header h2 { font-size: 14px; font-weight: 600; color: var(--gray-800); }
+.feed-count { font-size: 11px; font-weight: 600; background: var(--gray-200); color: var(--gray-600); padding: 2px 7px; border-radius: 10px; }
+.feed-content { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 0; }
+.feed-empty { text-align: center; padding: 40px 20px; color: var(--gray-400); }
+.feed-empty i { font-size: 28px; margin-bottom: 10px; display: block; }
+.feed-empty p { font-size: 12px; }
+.feed-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: var(--radius); border: 1px solid; border-left-width: 3px; margin-bottom: 6px; animation: taskIn 0.4s ease; }
+.feed-item .feed-tag { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 3px; white-space: nowrap; }
+.feed-item .feed-title { font-size: 11px; font-weight: 600; color: var(--gray-800); flex: 1; }
+.feed-item .feed-check { color: var(--emerald-600); font-size: 12px; display: none; }
+.feed-item.checked .feed-check { display: inline; }
+.feed-item .feed-meta { font-size: 10px; color: var(--gray-500); white-space: nowrap; }
+.feed-item.level-l1 { background: var(--level-l1-bg); border-color: var(--level-l1-border); border-left-color: var(--level-l1-color); }
+.feed-item.level-l1 .feed-tag { background: var(--level-l1-border); color: var(--level-l1-text); }
+.feed-item.level-l2 { background: var(--level-l2-bg); border-color: var(--level-l2-border); border-left-color: var(--level-l2-color); }
+.feed-item.level-l2 .feed-tag { background: var(--level-l2-border); color: var(--level-l2-text); }
+.feed-item.level-l3 { background: var(--level-l3-bg); border-color: var(--level-l3-border); border-left-color: var(--level-l3-color); }
+.feed-item.level-l3 .feed-tag { background: var(--level-l3-border); color: var(--level-l3-text); }
+.feed-item.level-l4 { background: var(--level-l4-bg); border-color: var(--level-l4-border); border-left-color: var(--level-l4-color); }
+.feed-item.level-l4 .feed-tag { background: var(--level-l4-border); color: var(--level-l4-text); }
+.feed-divider { display: flex; align-items: center; gap: 8px; padding: 10px 0 6px 0; }
+.feed-divider .feed-divider-line { flex: 1; height: 1px; background: var(--gray-200); }
+.feed-divider .feed-divider-label { font-size: 9px; font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+
+/* ── CONFIRMATION CARD ── */
+.confirm-card { background: white; border: 1.5px solid var(--gray-200); border-radius: var(--radius-lg); overflow: hidden; animation: planIn 0.4s ease; max-width: 420px; flex-shrink: 0; }
+.confirm-card-header { padding: 10px 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--gray-200); }
+.confirm-card-header .agent-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.confirm-card-header i { font-size: 13px; }
+.confirm-card-header h3 { font-size: 13px; font-weight: 600; color: var(--gray-800); }
+.confirm-card-body { padding: 14px 16px; }
+.confirm-field { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12.5px; border-bottom: 1px solid var(--gray-100); }
+.confirm-field:last-child { border-bottom: none; }
+.confirm-field .label { color: var(--gray-500); font-weight: 500; }
+.confirm-field .value { color: var(--gray-800); font-weight: 600; text-align: right; }
+.confirm-preview { margin-top: 10px; padding: 10px 12px; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius); font-size: 12px; line-height: 1.6; color: var(--gray-600); white-space: pre-wrap; max-height: 140px; overflow-y: auto; }
+.confirm-warning { margin-top: 10px; padding: 8px 10px; background: var(--amber-50); border: 1px solid var(--amber-100); border-radius: var(--radius); font-size: 11px; color: var(--amber-700); display: flex; align-items: flex-start; gap: 6px; }
+.confirm-warning i { flex-shrink: 0; margin-top: 1px; }
+.confirm-actions { padding: 12px 16px; border-top: 1px solid var(--gray-200); display: flex; gap: 8px; justify-content: flex-end; }
+
+/* ── PROACTIVE NOTIFICATION ── */
+.proactive-block { max-width: 92%; animation: msgIn 0.3s ease; flex-shrink: 0; }
+.proactive-body { padding: 12px 16px; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); border-left: 3px solid var(--level-l1-color); font-size: 13px; line-height: 1.55; color: var(--gray-700); }
+.proactive-body .proactive-text { margin-bottom: 8px; }
+.proactive-body .proactive-why { font-size: 12px; color: var(--gray-500); font-style: italic; }
+.proactive-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.proactive-actions button { padding: 6px 12px; border-radius: var(--radius); font-size: 11px; font-weight: 600; border: 1px solid var(--gray-200); background: white; color: var(--gray-700); cursor: pointer; font-family: inherit; transition: all 0.15s; }
+.proactive-actions button:hover { background: var(--gray-100); }
+
+/* ── TIME DIVIDER (chat) ── */
+.chat-time-divider { display: flex; align-items: center; gap: 10px; padding: 8px 0; animation: msgIn 0.3s ease; }
+.chat-time-divider .divider-line { flex: 1; height: 1px; background: var(--gray-300); }
+.chat-time-divider .divider-label { font-size: 11px; font-weight: 600; color: var(--gray-400); white-space: nowrap; }
+
+/* ── AGENT THINKING (enhanced) ── */
+.thinking-step .agent-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.thinking-step .agent-label { font-weight: 600; margin-right: 4px; }
+
+/* ── PROGRESS CHECKLIST ── */
+.progress-checklist { background: white; border: 1px solid var(--gray-200); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+.progress-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; color: var(--gray-800); margin-bottom: 10px; }
+.phase-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12px; }
+.phase-dot { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 9px; }
+.phase-dot.done { background: #22c55e; color: white; }
+.phase-dot.active { background: #263c91; color: white; animation: pulse 2s infinite; }
+.phase-dot.upcoming { background: #e5e7eb; }
+.phase-label.done { color: var(--gray-500); text-decoration: line-through; text-decoration-color: var(--gray-300); }
+.phase-label.active { color: #263c91; font-weight: 600; }
+.phase-label.upcoming { color: var(--gray-400); }
+
+/* ── PROMPT SUGGESTIONS ── */
+.prompt-suggestions { display: flex; gap: 8px; flex-wrap: wrap; padding: 0 0 10px 0; }
+.prompt-pill { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid var(--gray-200); background: white; color: var(--gray-700); font-family: inherit; transition: all 0.15s; }
+.prompt-pill:hover { background: var(--gray-50); border-color: var(--gray-300); }
+.prompt-pill.primary { border-color: var(--primary-100); background: var(--primary-50); color: var(--primary); }
+.prompt-pill.primary:hover { background: var(--primary-100); }
+.chat-input-wrapper { flex: 1; display: flex; align-items: center; border: 1.5px solid var(--gray-200); border-radius: 24px; padding: 0 12px 0 16px; background: white; transition: border-color 0.15s; }
+.chat-input-wrapper:focus-within { border-color: var(--primary); }
+.chat-input-wrapper .chat-input { flex: 1; padding: 10px 0; border: none; border-radius: 0; font-size: 13px; outline: none; background: transparent; }
+.attach-btn { background: none; border: none; color: var(--gray-400); cursor: pointer; font-size: 14px; padding: 4px; }
+.send-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; transition: all 0.15s; }
+.send-btn:hover { background: var(--primary-700); }
+.send-btn:disabled { background: var(--gray-300); cursor: default; }
+.chat-input-area.working .prompt-suggestions { display: none; }
+.chat-input-area.working .chat-input-wrapper { background: var(--gray-50); opacity: 0.5; }
+.chat-input-area.working .chat-input { color: var(--gray-400); }
+.chat-input-area.working .send-btn { background: var(--gray-300); }
+.scenario-end-card { background: white; border: 1.5px solid var(--primary-200); border-radius: var(--radius-lg); padding: 16px; animation: planIn 0.4s ease; max-width: 92%; flex-shrink: 0; }
+.scenario-end-card .end-summary { font-size: 13px; line-height: 1.55; color: var(--gray-700); margin-bottom: 12px; }
+.scenario-end-card .end-label { font-size: 10px; font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="logo">
+    <div class="ava-icon"><i class="fa-solid fa-bolt"></i></div>
+    Emma · Events Agent
+  </div>
+  <div class="separator"></div>
+  <span style="font-size:12px;opacity:0.7;">Interaction Patterns Prototype</span>
+  <div style="margin-left:auto;display:flex;background:rgba(255,255,255,0.12);border-radius:6px;padding:3px;">
+    <div style="padding:4px 14px;border-radius:4px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.5);cursor:pointer;" onclick="window.location.href='ava-events-prototype.html'">Single Agent</div>
+    <div style="padding:4px 14px;border-radius:4px;font-size:12px;font-weight:600;background:rgba(255,255,255,0.2);color:white;cursor:default;">Multi Agent</div>
+  </div>
+</div>
+
+<!-- SCENARIO TABS -->
+<div class="scenario-tabs" id="scenarioTabs"></div>
+<!-- SCENARIO INFO -->
+<div class="scenario-info" id="scenarioInfo"></div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+  <!-- CHAT PANEL -->
+  <div class="chat-panel">
+    <div class="chat-header">
+      <h2 id="chatTitle">Chat with Emma</h2>
+      <div class="pattern-badge" id="chatBadge"></div>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-area">
+      <div class="prompt-suggestions" id="promptSuggestions"></div>
+      <div class="chat-input-row">
+        <div class="chat-input-wrapper">
+          <input class="chat-input" id="chatInput" placeholder="Ask Emma anything...">
+          <button class="attach-btn" title="Attach"><i class="fa-solid fa-paperclip"></i></button>
+        </div>
+        <button class="send-btn" id="sendBtn" onclick="handleSend()">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIVITY FEED PANEL -->
+  <div class="board-panel">
+    <div class="feed-header">
+      <h2>Activity Feed</h2>
+      <span class="feed-count" id="feedCount">0</span>
+    </div>
+    <div class="feed-content" id="feedContent">
+      <div class="progress-checklist" id="progressChecklist" style="display:none;"></div>
+      <div class="feed-empty" id="feedEmpty">
+        <i class="fa-regular fa-bell"></i>
+        <p>Agent activity will appear here as the conversation progresses</p>
+      </div>
+      <div id="feedItems" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  SCENARIO DATA
+// ═══════════════════════════════════════════════════
+
+const scenarios = [
+  {
+    id: 'open-day-followup',
+    shortTitle: 'Open Day Follow-Up',
+    chatTitle: 'Chat with Emma',
+    badge: 'CROSS-AGENT',
+    description: 'Events → Enrolment → Leads pipeline after an Open Day',
+    pattern: 'Sequential Pipeline',
+    agents: ['Events', 'Enrolment', 'Leads', 'Insights'],
+    prompts: [
+      { icon: '✨', text: "How did last Saturday's Open Day go?", primary: true },
+      { icon: '📊', text: "Show me who hasn't applied yet" }
+    ],
+    phases: [
+      { label: "Pulling data", startsAt: 1 },
+      { label: "Analysing pipeline", startsAt: 3 },
+      { label: "Drafting follow-ups", startsAt: 7 },
+      { label: "Tracking results", startsAt: 10 }
+    ],
+    steps: [
+      // Step 1: User request
+      { type: 'user', text: "How did last Saturday's Open Day go? Who came, who hasn't applied, and can you follow up with them?" },
+
+      // Step 2: Agent thinking
+      { type: 'agent-thinking', steps: [
+        { agent: 'Events', text: 'Pulling attendance data for Spring Open Day (14 Mar 2026)...', result: '132 registered, 107 attended, 25 no-shows' },
+        { agent: 'Enrolment', text: 'Cross-referencing attendees with application records...', result: '45 applied, 18 started, 44 no action' },
+        { agent: 'Leads', text: 'Checking enquiry status for non-applicant families...', result: '38 active enquiries, 6 no enquiry record' }
+      ]},
+
+      // Step 3: Attendance table
+      { type: 'data-table', icon: 'fa-calendar-check', title: 'Attendance — Spring Open Day', headers: ['Year Group', 'Registered', 'Attended', 'No-Shows', 'No-Show Rate'], rows: [
+        ['Year 7', '85', '68', '17', '20%'],
+        ['Year 8', '32', '28', '4', '13%'],
+        ['Year 9', '15', '11', '4', '27%'],
+        ['<strong>Total</strong>', '<strong>132</strong>', '<strong>107</strong>', '<strong>25</strong>', '<strong>19%</strong>']
+      ]},
+
+      // Step 4: Conversion pipeline table
+      { type: 'data-table', icon: 'fa-chart-bar', title: 'Conversion Pipeline', headers: ['Status', 'Families', '% of Attendees'], rows: [
+        ['Application submitted', '45', '42%'],
+        ['Application started, not submitted', '18', '17%'],
+        ['Active enquiry, no application', '38', '36%'],
+        ['No enquiry or application', '6', '5%']
+      ]},
+
+      // Step 5: Lead status summary
+      { type: 'ava', text: "Of the <strong>62 families</strong> who attended but haven't submitted an application:<br><br>• <strong>18</strong> started an application but haven't finished — these need a <strong>completion chaser</strong><br>• <strong>38</strong> have an active enquiry but haven't started — these need a <strong>conversion nudge</strong><br>• <strong>6</strong> attended with no enquiry record — may have registered as guests<br><br>I can draft three different follow-up emails tailored to each group." },
+
+      // Step 6: Options
+      { type: 'options', title: 'What would you like to do?', items: [
+        { letter: 'A', text: '<strong>Draft all three emails</strong> — one for each group, personalised', response: 'Draft all three emails' },
+        { letter: 'B', text: '<strong>Start with incomplete applications</strong> — highest conversion potential', response: 'Start with incomplete applications' },
+        { letter: 'C', text: '<strong>Show the 6 unknown families</strong> — investigate who they are', response: 'Show me the 6 unknown families' }
+      ]},
+
+      // Step 7: Confirmation card — Enrolment Agent
+      { type: 'confirmation-card', agent: 'Enrolment', title: 'Application Completion Chaser', level: 'L2',
+        fields: [
+          { label: 'To', value: '18 families (application started, not submitted)' },
+          { label: 'Subject', value: 'Your application is almost complete' }
+        ],
+        body: 'Dear [Parent Name],\n\nIt was lovely to see you at our Spring Open Day on Saturday. We noticed you\'ve started an application for [Child Name] but haven\'t submitted it yet.\n\nYou\'re almost there — here\'s what\'s still needed:\n[Missing Fields List]\n\nComplete your application here: [Link]\n\nIf you have any questions, please get in touch.\n\n[School Name] Admissions Team',
+        warning: 'This will send 18 personalised emails. Each email includes the specific missing fields for that family.',
+        feedItem: { tag: 'Review', title: 'Completion chaser', time: '2:15pm' }
+      },
+
+      // Step 8: Confirmation card — Leads Agent
+      { type: 'confirmation-card', agent: 'Leads', title: 'Conversion Follow-Up', level: 'L2',
+        fields: [
+          { label: 'To', value: '38 families (active enquiry, no application)' },
+          { label: 'Subject', value: 'Thank you for visiting — take the next step' }
+        ],
+        body: 'Dear [Parent Name],\n\nThank you for attending our Spring Open Day on Saturday. We hope you and [Child Name] enjoyed the visit.\n\nWhen you\'re ready, you can start an application through your admissions portal: [Link]\n\nThe application deadline for [Year Group] entry is [Deadline Date]. If you\'d like to discuss your child\'s options, we\'re happy to arrange a conversation.\n\n[School Name] Admissions Team',
+        warning: 'This will send 38 personalised emails.',
+        feedItem: { tag: 'Review', title: 'Conversion follow-up', time: '2:16pm' }
+      },
+
+      // Step 9: Confirmation card — Events Agent
+      { type: 'confirmation-card', agent: 'Events', title: 'No-Show Re-Engagement', level: 'L2',
+        fields: [
+          { label: 'To', value: '25 families (registered but didn\'t attend)' },
+          { label: 'Subject', value: 'Sorry we missed you — upcoming opportunities' }
+        ],
+        body: 'Dear [Parent Name],\n\nWe noticed you weren\'t able to make it to our Spring Open Day on Saturday — we hope everything is well.\n\nIf you\'d still like to visit, we have some upcoming opportunities:\n• Private Tour — [Next available date]\n• Year 7 Open Evening — [Date]\n\nBook a visit here: [Link]\n\n[School Name] Admissions Team',
+        warning: 'This will send 25 emails. Upcoming event dates are pulled automatically from your published events.',
+        feedItem: { tag: 'Review', title: 'No-show re-engagement', time: '2:17pm' }
+      },
+
+      // Step 10: Proactive — conversion tracking
+      { type: 'proactive', agent: 'Insights', level: 'L1',
+        body: "I noticed the follow-up campaign results are in — here's the one-week conversion summary: Incomplete application chasers: 15 of 18 opened (83%), 7 submitted. Conversion follow-ups: 28 of 38 opened (74%), 5 started applications. No-show re-engagement: 16 of 25 opened (64%), 2 booked tours. Total attendee-to-application conversion is now 53% (was 42% before follow-up).",
+        why: 'Automated 7-day tracking for all post-event follow-up campaigns.',
+        actions: ['Draft second follow-up', 'View detailed breakdown', 'Dismiss'],
+        feedItem: { tag: 'Insight', title: 'Conversion tracking', time: '9:00am' }
+      },
+
+      { type: 'scenario-end',
+        summary: "Here's what happened: I pulled attendance data across Events, Enrolment, and Leads agents, showed you the conversion breakdown, drafted 3 follow-up emails for your approval, and tracked the campaign results a week later.",
+        nextPrompts: [
+          { icon: '✨', text: 'Set up the Year 7 2028 intake', scenario: 1, primary: true },
+          { icon: '👨‍👩‍👦', text: 'New family enquiry for Minh Nguyen', scenario: 2 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'cycle-setup',
+    shortTitle: 'Cycle Setup',
+    chatTitle: 'Chat with Emma',
+    badge: 'CROSS-AGENT',
+    description: 'Parallel agents set up an entire admissions cycle from scratch',
+    pattern: 'Parallel Collaboration',
+    agents: ['Events', 'Meetings', 'Insights', 'Enrolment'],
+    prompts: [
+      { icon: '✨', text: "Set up everything for the Year 7 2028 intake", primary: true },
+      { icon: '📅', text: "What events do we need for next year?" }
+    ],
+    phases: [
+      { label: "Looking up last year", startsAt: 1 },
+      { label: "Planning dates", startsAt: 3 },
+      { label: "Creating drafts", startsAt: 7 },
+      { label: "Confirming setup", startsAt: 9 }
+    ],
+    steps: [
+      // Step 1: User request
+      { type: 'user', text: "We need to start planning the Year 7 2028 intake. Can you set up everything we need — same structure as last year's cycle but with updated dates?" },
+
+      // Step 2: Agent thinking (parallel)
+      { type: 'agent-thinking', steps: [
+        { agent: 'Insights', text: 'Looking up last year\'s Year 7 2027 cycle configuration...', result: 'Found: 6 events, 3 interview days, application form with 12 fields' },
+        { agent: 'Events', text: 'Mapping event dates to 2027-28 academic year...', result: '6 events date-shifted to equivalent weekdays' },
+        { agent: 'Meetings', text: 'Identifying interview slot patterns from previous year...', result: '3 interview days, 50 total slots configured' },
+        { agent: 'Enrolment', text: 'Retrieving offer templates and acceptance tracking config...', result: 'Offer templates and tracking config retrieved' }
+      ]},
+
+      // Step 3: Events calendar table
+      { type: 'data-table', icon: 'fa-calendar', title: 'Events Calendar — Year 7 2028 Intake', headers: ['Event', 'Last Year', 'Proposed Date', 'Capacity'], rows: [
+        ['Autumn Open Evening', '12 Oct 2026', '11 Oct 2027', '250'],
+        ['Autumn Open Morning 1', '8 Nov 2026', '7 Nov 2027', '15'],
+        ['Autumn Open Morning 2', '6 Dec 2026', '5 Dec 2027', '15'],
+        ['Spring Open Day', '22 Mar 2027', '21 Mar 2028', '200'],
+        ['Year 6 Taster Day', '15 Jun 2027', '14 Jun 2028', '120'],
+        ['New Intake Welcome Evening', '28 Jun 2027', '27 Jun 2028', '180']
+      ]},
+
+      // Step 4: Interview schedule table
+      { type: 'data-table', icon: 'fa-users', title: 'Interview Schedule', headers: ['Interview Day', 'Last Year', 'Proposed Date', 'Slots'], rows: [
+        ['Interview Day 1', '15 Jan 2027', '14 Jan 2028', '20'],
+        ['Interview Day 2', '22 Jan 2027', '21 Jan 2028', '20'],
+        ['Interview Day 3 (catch-up)', '5 Feb 2027', '4 Feb 2028', '10']
+      ]},
+
+      // Step 5: Summary text
+      { type: 'ava', text: "<strong>Application Form:</strong> Last year's form had 12 fields across 4 steps. I'll clone the form structure and update the entry year to September 2028.<br><br><strong>Enrolment Pipeline:</strong> Offer letters, waitlist logic, and acceptance tracking templates will be cloned from last year and updated with new dates.<br><br>This is a lot to set up. I'd suggest we work through it in stages — want me to start with the events calendar?" },
+
+      // Step 6: Options
+      { type: 'options', title: 'How would you like to proceed?', items: [
+        { letter: 'A', text: '<strong>Create all events as drafts</strong> — clone settings from last year, nothing visible to parents', response: 'Create all events as drafts' },
+        { letter: 'B', text: '<strong>Start with the application form</strong> — clone and update the Year 7 form first', response: 'Start with the application form' },
+        { letter: 'C', text: '<strong>Show me the full timeline</strong> — visual overview before creating anything', response: 'Show me the full timeline' }
+      ]},
+
+      // Step 7: Confirmation card — batch create events
+      { type: 'confirmation-card', agent: 'Events', title: 'Create 6 Draft Events', level: 'L3',
+        fields: [
+          { label: 'Action', value: 'Clone 6 events from Year 7 2027 cycle' },
+          { label: 'Status', value: 'All created as DRAFT' }
+        ],
+        body: '1. Autumn Open Evening — 11 Oct 2027, 250 seats\n   Cloned: 3 questions, 2 email templates, Y7 filter\n\n2. Autumn Open Morning 1 — 7 Nov 2027, 15 seats\n   Cloned: 2 questions, 1 email template\n\n3. Autumn Open Morning 2 — 5 Dec 2027, 15 seats\n   Cloned: same as Open Morning 1\n\n4. Spring Open Day — 21 Mar 2028, 200 seats\n   Cloned: 3 questions, 2 email templates, Y7/Y8 filter\n\n5. Year 6 Taster Day — 14 Jun 2028, 120 seats\n   Cloned: 4 questions, 1 email template, Y6 filter\n\n6. New Intake Welcome — 27 Jun 2028, 180 seats\n   Cloned: 1 question, 1 email template, offer holders',
+        warning: 'All events will be created as DRAFT — not visible to parents until you publish each one.',
+        feedItem: { tag: 'Done', title: 'Create 6 draft events', time: '10:30am' }
+      },
+
+      // Step 8: Approve
+      { type: 'approve', taskTitle: 'Create 6 draft events' },
+
+      // Step 9: Progress checklist
+      { type: 'ava', text: "All 6 events created as drafts. Here's what's next:<br><br>✓ <strong>Events calendar</strong> — 6 drafts created<br>○ <strong>Interview schedule</strong> — create 3 interview days with booking slots<br>○ <strong>Application form</strong> — clone and update the Year 7 form<br>○ <strong>Enrolment pipeline</strong> — clone offer templates and acceptance tracking<br><br>Want to continue with the interview schedule?" },
+
+      // Step 10: Activity update — L4 Auto
+      { type: 'activity-update', items: [
+        { tag: 'Auto', title: 'Draft confirmation emails queued', agent: 'Events', time: '10:31am' }
+      ]},
+
+      { type: 'scenario-end',
+        summary: "Here's what happened: 4 agents worked in parallel to map last year's admissions cycle, I created 6 draft events for your review, and queued confirmation emails automatically in the background.",
+        nextPrompts: [
+          { icon: '✨', text: 'Follow up after the Open Day', scenario: 0, primary: true },
+          { icon: '👨‍👩‍👦', text: 'New family enquiry for Minh Nguyen', scenario: 2 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'family-journey',
+    shortTitle: 'Family Journey',
+    chatTitle: 'Chat with Emma',
+    badge: 'CROSS-AGENT',
+    description: 'Leads → Events → Enrolment orchestrated journey for one family',
+    pattern: 'Orchestrated Handoff',
+    agents: ['Leads', 'Events', 'Meetings', 'Enrolment'],
+    prompts: [
+      { icon: '✨', text: "The Nguyen family just called about Year 7 for Minh", primary: true },
+      { icon: '📞', text: "New phone enquiry for Year 7" }
+    ],
+    phases: [
+      { label: "Creating enquiry", startsAt: 1 },
+      { label: "Sending welcome", startsAt: 5 },
+      { label: "Monitoring visit", startsAt: 9 },
+      { label: "Flagging inactivity", startsAt: 11 }
+    ],
+    steps: [
+      // Step 1: User request
+      { type: 'user', text: "The Nguyen family just called about Year 7 entry for their son Minh. They want to come to our next Open Day and understand how to apply. Can you set them up?" },
+
+      // Step 2: Agent thinking
+      { type: 'agent-thinking', steps: [
+        { agent: 'Leads', text: 'Creating enquiry record for the Nguyen family...', result: 'Enquiry created — Minh Nguyen, Year 7 2027' },
+        { agent: 'Events', text: 'Finding next available Year 7 events...', result: 'Found: Autumn Open Morning (7 Nov 2027), Spring Open Day (21 Mar 2028)' },
+        { agent: 'Leads', text: 'Checking pipeline stage...', result: 'Placed at "New Enquiry" stage' }
+      ]},
+
+      // Step 3: Confirmation card — create enquiry (L3)
+      { type: 'confirmation-card', agent: 'Leads', title: 'Create Enquiry', level: 'L3',
+        fields: [
+          { label: 'Parent Name', value: 'Mr & Mrs Nguyen' },
+          { label: 'Child Name', value: 'Minh Nguyen' },
+          { label: 'Year of Entry', value: 'Year 7 — September 2027' },
+          { label: 'Source', value: 'Phone call' },
+          { label: 'Pipeline Stage', value: 'New Enquiry' }
+        ],
+        body: 'Next available events:\n• Autumn Open Morning 1 — 7 Nov 2027 (5 of 15 left)\n• Spring Open Day — 21 Mar 2028 (registration open)',
+        warning: null,
+        feedItem: { tag: 'Done', title: 'Enquiry created', time: '2:05pm' }
+      },
+
+      // Step 4: Approve enquiry
+      { type: 'approve', taskTitle: 'Enquiry created' },
+
+      // Step 5: Options
+      { type: 'options', title: 'What would you like to do next?', items: [
+        { letter: 'A', text: '<strong>Register for November Open Morning</strong> — 5 of 15 spots remaining', response: 'Register for the Open Morning' },
+        { letter: 'B', text: '<strong>Send welcome email with options</strong> — let them choose which event to attend', response: 'Send welcome email with options' },
+        { letter: 'C', text: '<strong>Just the enquiry for now</strong> — no further action', response: 'Just the enquiry for now' }
+      ]},
+
+      // Step 6: Confirmation card — welcome email (L2)
+      { type: 'confirmation-card', agent: 'Leads', title: 'Welcome Email', level: 'L2',
+        fields: [
+          { label: 'To', value: 'Mr & Mrs Nguyen (nguyen@email.com)' },
+          { label: 'Subject', value: 'Welcome to [School Name] — next steps for Minh\'s application' }
+        ],
+        body: 'Dear Mr & Mrs Nguyen,\n\nThank you for your enquiry about Year 7 entry for Minh in September 2027. We\'re delighted you\'re considering [School Name].\n\nHere\'s how to get started:\n\n1. VISIT US\n• Open Morning — 7 November 2027 [Register here]\n• Spring Open Day — 21 March 2028 [Register here]\n\n2. APPLY\nYou can start an application at any time: [Portal Link]\nDeadline: 30 April 2028\n\n3. TIMELINE\n• Applications open: Now\n• Application deadline: 30 April 2028\n• Interviews: January 2028\n• Offers: May 2028\n\n[School Name] Admissions Team',
+        warning: 'This will send 1 email. Event links from Events Agent. Timeline from Insights Agent.',
+        feedItem: { tag: 'Review', title: 'Welcome email', time: '2:20pm' }
+      },
+
+      // Step 7: Approve email
+      { type: 'approve', taskTitle: 'Welcome email' },
+
+      // Step 8: Activity update — registration confirmation (L4)
+      { type: 'activity-update', items: [
+        { tag: 'Auto', title: 'Registration confirmation sent', agent: 'Events', time: '2:30pm' }
+      ]},
+
+      // Step 9: Time divider — Open Morning
+      { type: 'time-divider', label: '7 November — Open Morning' },
+
+      // Step 10: Activity update — pre-event + attendance (L4)
+      { type: 'activity-update', items: [
+        { tag: 'Auto', title: 'Pre-event reminder sent', agent: 'Events', time: '8:00am' },
+        { tag: 'Auto', title: 'Attendance recorded', agent: 'Events', time: '11:45am' }
+      ]},
+
+      // Step 11: Time divider — 14 days later
+      { type: 'time-divider', label: '21 November — 14 days later' },
+
+      // Step 12: Proactive — inactivity flag
+      { type: 'proactive', agent: 'Leads', level: 'L1',
+        body: "I noticed the Nguyen family hasn't started an application — it's been 14 days since their Open Morning visit. They've been on the portal twice since the visit but didn't begin the form.",
+        why: 'Families who visit but don\'t apply within 14 days have a 40% lower conversion rate based on your historical data.',
+        actions: ['Draft personalised follow-up', 'Flag for registrar to call', 'Dismiss'],
+        feedItem: { tag: 'Insight', title: '14-day inactivity', time: '9:15am' }
+      },
+
+      { type: 'scenario-end',
+        summary: "Here's what happened: I set up an enquiry for the Nguyen family, drafted a welcome email for your approval, handled event registration and reminders automatically, and flagged when they hadn't applied after 14 days.",
+        nextPrompts: [
+          { icon: '✨', text: 'Follow up after the Open Day', scenario: 0, primary: true },
+          { icon: '📅', text: 'Set up the Year 7 2028 intake', scenario: 1 }
+        ]
+      }
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+let currentScenario = 0;
+let currentStep = 0;
+
+// ═══════════════════════════════════════════════════
+//  AGENT & AUTONOMY CONFIG
+// ═══════════════════════════════════════════════════
+const AGENT_COLORS = {
+  Events: 'var(--agent-events)',
+  Enrolment: 'var(--agent-enrolment)',
+  Leads: 'var(--agent-leads)',
+  Meetings: 'var(--agent-meetings)',
+  Insights: 'var(--agent-insights)'
+};
+
+const LEVEL_CONFIG = {
+  L1: { tag: 'Insight', cls: 'level-l1' },
+  L2: { tag: 'Review', cls: 'level-l2' },
+  L3: { tag: 'Done', cls: 'level-l3' },
+  L4: { tag: 'Auto', cls: 'level-l4' }
+};
+
+let feedItemCount = 0;
+
+// ═══════════════════════════════════════════════════
+//  ACTIVITY FEED
+// ═══════════════════════════════════════════════════
+function showFeed() {
+  document.getElementById('feedEmpty').style.display = 'none';
+  document.getElementById('feedItems').style.display = 'flex';
+  document.getElementById('feedItems').style.flexDirection = 'column';
+  document.getElementById('feedItems').style.gap = '0';
+}
+
+function pushActivityItem(tag, title, agent, time, level) {
+  showFeed();
+  feedItemCount++;
+  document.getElementById('feedCount').textContent = feedItemCount;
+
+  const levelKey = level || (tag === 'Insight' ? 'L1' : tag === 'Review' ? 'L2' : tag === 'Done' ? 'L3' : 'L4');
+  const cfg = LEVEL_CONFIG[levelKey];
+
+  const el = document.createElement('div');
+  el.className = `feed-item ${cfg.cls}`;
+  el.dataset.title = title;
+  el.innerHTML = `
+    <span class="feed-tag">${cfg.tag}</span>
+    <span class="feed-title">${title}</span>
+    <span class="feed-check">✓</span>
+    <span class="feed-meta">${agent} · ${time}</span>
+  `;
+
+  const feedItems = document.getElementById('feedItems');
+  feedItems.insertBefore(el, feedItems.firstChild);
+  document.getElementById('feedContent').scrollTop = 0;
+  return el;
+}
+
+function pushFeedDivider(label) {
+  showFeed();
+  const el = document.createElement('div');
+  el.className = 'feed-divider';
+  el.innerHTML = `
+    <div class="feed-divider-line"></div>
+    <span class="feed-divider-label">${label}</span>
+    <div class="feed-divider-line"></div>
+  `;
+  const feedItems = document.getElementById('feedItems');
+  feedItems.insertBefore(el, feedItems.firstChild);
+}
+
+function markFeedItemChecked(title) {
+  const items = document.querySelectorAll('.feed-item');
+  items.forEach(item => {
+    if (item.dataset.title === title) {
+      item.classList.add('checked');
+    }
+  });
+}
+
+function resetFeed() {
+  feedItemCount = 0;
+  document.getElementById('feedCount').textContent = '0';
+  document.getElementById('feedEmpty').style.display = 'block';
+  document.getElementById('feedItems').style.display = 'none';
+  document.getElementById('feedItems').innerHTML = '';
+  document.getElementById('progressChecklist').style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════════
+//  PROGRESS CHECKLIST
+// ═══════════════════════════════════════════════════
+function renderPhaseChecklist() {
+  const s = scenarios[currentScenario];
+  const el = document.getElementById('progressChecklist');
+
+  if (!s.phases || s.phases.length === 0) {
+    el.style.display = 'none';
+    return;
+  }
+
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="progress-title">${s.shortTitle}</div>
+    ${s.phases.map((phase, i) => `
+      <div class="phase-item" data-phase="${i}">
+        <div class="phase-dot upcoming"></div>
+        <span class="phase-label upcoming">${phase.label}</span>
+      </div>
+    `).join('')}
+  `;
+
+  updatePhaseChecklist();
+}
+
+function updatePhaseChecklist() {
+  const s = scenarios[currentScenario];
+  if (!s.phases || s.phases.length === 0) return;
+
+  const el = document.getElementById('progressChecklist');
+  const phaseItems = el.querySelectorAll('.phase-item');
+
+  s.phases.forEach((phase, i) => {
+    const item = phaseItems[i];
+    if (!item) return;
+
+    const dot = item.querySelector('.phase-dot');
+    const label = item.querySelector('.phase-label');
+    const nextStart = (i + 1 < s.phases.length) ? s.phases[i + 1].startsAt : Infinity;
+
+    dot.className = 'phase-dot';
+    label.className = 'phase-label';
+
+    if (currentStep >= nextStart) {
+      dot.classList.add('done');
+      dot.textContent = '✓';
+      label.classList.add('done');
+    } else if (currentStep >= phase.startsAt) {
+      dot.classList.add('active');
+      dot.textContent = '●';
+      label.classList.add('active');
+    } else {
+      dot.classList.add('upcoming');
+      dot.textContent = '';
+      label.classList.add('upcoming');
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  AUTO-PLAY ENGINE
+// ═══════════════════════════════════════════════════
+function getAutoPlayDelay(step) {
+  switch (step.type) {
+    case 'agent-thinking': return 0;
+    case 'thinking': return 0;
+    case 'data-table': return 700;
+    case 'ava': case 'ava-html': return 500;
+    case 'stats': return 500;
+    case 'time-divider': return 300;
+    case 'activity-update': return 0;
+    case 'approve': return 400;
+    default: return 0;
+  }
+}
+
+function setInputState(state) {
+  const area = document.querySelector('.chat-input-area');
+  const input = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('sendBtn');
+  if (state === 'working') {
+    area.classList.add('working');
+    input.disabled = true;
+    input.placeholder = 'Emma is working...';
+    sendBtn.disabled = true;
+  } else {
+    area.classList.remove('working');
+    input.disabled = false;
+    input.placeholder = 'Ask Emma anything...';
+    sendBtn.disabled = false;
+  }
+}
+
+function showPromptSuggestions(prompts) {
+  const container = document.getElementById('promptSuggestions');
+  if (!prompts || prompts.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  container.innerHTML = prompts.map((p, i) => {
+    const cls = p.primary ? 'prompt-pill primary' : 'prompt-pill';
+    return `<button class="${cls}" data-prompt-idx="${i}">${p.icon ? '<span>' + p.icon + '</span> ' : ''}${p.text}</button>`;
+  }).join('');
+  container.querySelectorAll('.prompt-pill').forEach((btn, i) => {
+    btn.addEventListener('click', () => selectPrompt(prompts[i].text));
+  });
+}
+
+function showNextScenarioPrompts(nextPrompts) {
+  const container = document.getElementById('promptSuggestions');
+  container.innerHTML = nextPrompts.map((p, i) => {
+    const cls = p.primary ? 'prompt-pill primary' : 'prompt-pill';
+    return `<button class="${cls}" data-scenario="${p.scenario}">${p.icon ? '<span>' + p.icon + '</span> ' : ''}${p.text}</button>`;
+  }).join('');
+  container.querySelectorAll('.prompt-pill').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const scenarioIdx = parseInt(btn.dataset.scenario);
+      loadScenario(scenarioIdx);
+    });
+  });
+}
+
+function selectPrompt(text) {
+  const input = document.getElementById('chatInput');
+  input.value = text;
+  document.getElementById('promptSuggestions').innerHTML = '';
+  setTimeout(() => handleSend(), 300);
+}
+
+function handleSend() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  if (scenarios.length === 0) return;
+
+  const chat = document.getElementById('chatMessages');
+  appendUserMsg(chat, text);
+  input.value = '';
+  setInputState('working');
+
+  currentStep = 1;
+  scrollChat();
+  setTimeout(() => playNext(), 500);
+}
+
+function playNext() {
+  if (scenarios.length === 0) return;
+  const s = scenarios[currentScenario];
+  if (currentStep >= s.steps.length) return;
+
+  updatePhaseChecklist();
+
+  const step = s.steps[currentStep];
+  const chat = document.getElementById('chatMessages');
+
+  if (step.type === 'options' || step.type === 'disambig' || step.type === 'scenario-end') {
+    renderStep(chat, step);
+    return;
+  }
+  if (step.type === 'confirmation-card') {
+    renderStep(chat, step);
+    return;
+  }
+  if (step.type === 'proactive') {
+    renderStep(chat, step);
+    return;
+  }
+
+  renderStep(chat, step, () => {
+    currentStep++;
+    scheduleNext();
+  });
+}
+
+function scheduleNext() {
+  const s = scenarios[currentScenario];
+  if (currentStep >= s.steps.length) return;
+  const next = s.steps[currentStep];
+  const delay = getAutoPlayDelay(next);
+  setTimeout(() => playNext(), delay);
+}
+
+function resumePlay() {
+  currentStep++;
+  setInputState('working');
+  scheduleNext();
+}
+
+function renderStep(chat, step, callback) {
+  switch (step.type) {
+    case 'ava':
+      showTyping(chat, () => {
+        appendAvaMsg(chat, step.text);
+        if (callback) callback();
+      });
+      break;
+    case 'ava-html':
+      showTyping(chat, () => {
+        appendAvaHtml(chat, step.html);
+        if (callback) callback();
+      });
+      break;
+    case 'thinking':
+      appendThinking(chat, step.steps, () => {
+        if (callback) callback();
+      });
+      break;
+    case 'agent-thinking':
+      appendAgentThinking(chat, step.steps, () => {
+        if (callback) callback();
+      });
+      break;
+    case 'data-table':
+      showTyping(chat, () => {
+        appendDataTable(chat, step);
+        if (callback) callback();
+      }, 700);
+      break;
+    case 'stats':
+      showTyping(chat, () => {
+        appendStats(chat, step.items);
+        if (callback) callback();
+      }, 500);
+      break;
+    case 'time-divider':
+      appendChatTimeDivider(chat, step.label);
+      pushFeedDivider(step.label);
+      if (callback) callback();
+      break;
+    case 'activity-update':
+      step.items.forEach(item => {
+        pushActivityItem(item.tag, item.title, item.agent, item.time);
+      });
+      if (callback) callback();
+      break;
+    case 'approve':
+      const lastCard = chat.querySelector('.confirm-card:last-of-type');
+      if (lastCard) {
+        lastCard.querySelectorAll('.plan-btn').forEach(b => { b.disabled = true; b.style.opacity = '0.4'; });
+      }
+      if (step.taskTitle) markFeedItemChecked(step.taskTitle);
+      appendUserMsg(chat, "✓ Approved — go ahead");
+      scrollChat();
+      if (callback) callback();
+      break;
+    case 'options':
+      showTyping(chat, () => {
+        appendOptionsCard(chat, step);
+        scrollChat();
+      }, 600);
+      break;
+    case 'disambig':
+      showTyping(chat, () => {
+        appendDisambigCard(chat, step);
+        scrollChat();
+      }, 500);
+      break;
+    case 'confirmation-card':
+      showTyping(chat, () => {
+        appendConfirmationCard(chat, step);
+        scrollChat();
+      }, 800);
+      break;
+    case 'proactive':
+      showTyping(chat, () => {
+        appendProactive(chat, step);
+        scrollChat();
+      }, 600);
+      break;
+    case 'scenario-end':
+      appendScenarioEnd(chat, step);
+      setInputState('ready');
+      if (step.nextPrompts) {
+        showNextScenarioPrompts(step.nextPrompts);
+      }
+      scrollChat();
+      break;
+  }
+}
+
+function appendScenarioEnd(container, step) {
+  const el = document.createElement('div');
+  el.className = 'scenario-end-card';
+  el.innerHTML = `
+    <div class="end-label">Conversation complete</div>
+    <div class="end-summary">${step.summary}</div>
+  `;
+  container.appendChild(el);
+}
+
+// ═══════════════════════════════════════════════════
+//  NEW STEP RENDERERS
+// ═══════════════════════════════════════════════════
+function appendAgentThinking(container, steps, callback) {
+  const block = document.createElement('div');
+  block.className = 'thinking-block';
+  block.innerHTML = `
+    <div class="thinking-header" onclick="this.parentElement.classList.toggle('collapsed')">
+      <div class="thinking-icon"><i class="fa-solid fa-bolt" style="font-size:10px;"></i></div>
+      <span class="thinking-label">Working across agents</span>
+      <div class="thinking-dots"><span></span><span></span><span></span></div>
+      <i class="fa-solid fa-chevron-up thinking-chevron"></i>
+    </div>
+    <div class="thinking-steps"></div>
+  `;
+  container.appendChild(block);
+  scrollChat();
+
+  const stepsContainer = block.querySelector('.thinking-steps');
+  let i = 0;
+
+  function showNextStep() {
+    if (i >= steps.length) {
+      block.classList.add('done');
+      setTimeout(() => {
+        block.classList.add('collapsed');
+        if (callback) callback();
+      }, 400);
+      return;
+    }
+    const s = steps[i];
+    const color = AGENT_COLORS[s.agent] || 'var(--gray-400)';
+    const stepEl = document.createElement('div');
+    stepEl.className = 'thinking-step active';
+    stepEl.innerHTML = `
+      <div class="agent-dot" style="background:${color};"></div>
+      <span class="agent-label" style="color:${color};">${s.agent}:</span>
+      <span>${s.text}</span>
+    `;
+    stepsContainer.appendChild(stepEl);
+    scrollChat();
+    i++;
+    setTimeout(() => {
+      stepEl.classList.remove('active');
+      stepEl.classList.add('done');
+      stepEl.innerHTML = `
+        <div class="agent-dot" style="background:${color};"></div>
+        <span class="agent-label" style="color:${color};">${s.agent}:</span>
+        <span>${s.result}</span>
+      `;
+      showNextStep();
+    }, 500 + Math.random() * 400);
+  }
+
+  showNextStep();
+}
+
+function appendConfirmationCard(container, step) {
+  const color = AGENT_COLORS[step.agent] || 'var(--gray-400)';
+  const isL3 = step.level === 'L3';
+  const el = document.createElement('div');
+  el.className = 'confirm-card';
+  el.innerHTML = `
+    <div class="confirm-card-header" style="background:${color}10;">
+      <div class="agent-dot" style="background:${color};"></div>
+      <i class="fa-solid fa-envelope" style="color:${color};"></i>
+      <h3 style="color:${color};">${step.agent} Agent — ${step.title}</h3>
+    </div>
+    <div class="confirm-card-body">
+      ${step.fields ? step.fields.map(f => `
+        <div class="confirm-field">
+          <span class="label">${f.label}</span>
+          <span class="value">${f.value}</span>
+        </div>
+      `).join('') : ''}
+      ${step.body ? `<div class="confirm-preview">${step.body}</div>` : ''}
+      ${step.warning ? `
+        <div class="confirm-warning">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>${step.warning}</span>
+        </div>
+      ` : ''}
+    </div>
+    <div class="confirm-actions">
+      <button class="plan-btn reject"><i class="fa-solid fa-xmark"></i> Cancel</button>
+      ${!isL3 ? '<button class="plan-btn edit"><i class="fa-solid fa-pen"></i> Edit</button>' : ''}
+      <button class="plan-btn approve confirm-send-btn"><i class="fa-solid fa-check"></i> ${isL3 ? 'Confirm' : 'Send'}</button>
+    </div>
+  `;
+
+  // Push feed item
+  if (step.feedItem) {
+    pushActivityItem(step.feedItem.tag, step.feedItem.title, step.agent, step.feedItem.time);
+  }
+
+  container.appendChild(el);
+
+  const sendBtn = el.querySelector('.confirm-send-btn');
+  if (sendBtn) {
+    sendBtn.addEventListener('click', () => {
+      el.querySelectorAll('.plan-btn').forEach(b => { b.disabled = true; b.style.opacity = '0.4'; });
+      if (step.feedItem) markFeedItemChecked(step.feedItem.title);
+      scrollChat();
+      resumePlay();
+    });
+  }
+}
+
+function appendProactive(container, step) {
+  const el = document.createElement('div');
+  el.className = 'proactive-block';
+  el.innerHTML = `
+    <div class="proactive-body">
+      <div class="proactive-text"><strong>${step.body}</strong></div>
+      ${step.why ? `<div class="proactive-why">Why: ${step.why}</div>` : ''}
+      ${step.actions ? `
+        <div class="proactive-actions">
+          ${step.actions.map(a => `<button>${a}</button>`).join('')}
+        </div>
+      ` : ''}
+    </div>
+  `;
+
+  // Push feed item
+  if (step.feedItem) {
+    pushActivityItem(step.feedItem.tag, step.feedItem.title, step.agent, step.feedItem.time);
+  }
+
+  container.appendChild(el);
+
+  el.querySelectorAll('.proactive-actions button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.textContent.trim();
+      el.querySelectorAll('.proactive-actions button').forEach(b => { b.disabled = true; b.style.opacity = '0.4'; });
+      if (action !== 'Dismiss') {
+        const chatEl = document.getElementById('chatMessages');
+        appendUserMsg(chatEl, action);
+        scrollChat();
+      }
+      resumePlay();
+    });
+  });
+}
+
+function appendChatTimeDivider(container, label) {
+  const el = document.createElement('div');
+  el.className = 'chat-time-divider';
+  el.innerHTML = `
+    <div class="divider-line"></div>
+    <span class="divider-label">${label}</span>
+    <div class="divider-line"></div>
+  `;
+  container.appendChild(el);
+}
+
+// ═══════════════════════════════════════════════════
+//  TABS & INFO BAR
+// ═══════════════════════════════════════════════════
+function renderTabs() {
+  const tabsEl = document.getElementById('scenarioTabs');
+  tabsEl.innerHTML = scenarios.map((s, i) =>
+    `<button class="scenario-tab${i === 0 ? ' active' : ''}" onclick="loadScenario(${i})">
+      <span class="tab-num">${i + 1}</span>${s.shortTitle}
+    </button>`
+  ).join('');
+}
+
+function renderInfoBar(s) {
+  document.getElementById('scenarioInfo').innerHTML = `
+    <span class="info-label">${s.pattern}</span>
+    <span class="info-text">${s.description}</span>
+    <div class="pattern-tags">
+      ${s.agents.map(a => `<span class="pattern-tag" style="background:${AGENT_COLORS[a]}20;color:${AGENT_COLORS[a]};">
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${AGENT_COLORS[a]};margin-right:4px;"></span>${a}
+      </span>`).join('')}
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+function init() {
+  if (scenarios.length > 0) {
+    renderTabs();
+    loadScenario(0);
+  }
+}
+
+function loadScenario(idx) {
+  currentScenario = idx;
+  currentStep = 0;
+
+  const s = scenarios[idx];
+
+  // Chat header
+  document.getElementById('chatTitle').textContent = s.chatTitle;
+  document.getElementById('chatBadge').textContent = s.badge;
+
+  // Clear chat
+  document.getElementById('chatMessages').innerHTML = '';
+
+  // Clear Activity Feed
+  resetFeed();
+
+  // Update tabs
+  document.querySelectorAll('.scenario-tab').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
+
+  // Info bar
+  renderInfoBar(s);
+
+  // Progress checklist
+  renderPhaseChecklist();
+
+  setInputState('ready');
+  if (s.prompts) {
+    showPromptSuggestions(s.prompts);
+  }
+}
+
+function restartScenario() {
+  if (scenarios.length > 0) {
+    loadScenario(currentScenario);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER HELPERS
+// ═══════════════════════════════════════════════════
+
+function showTyping(container, callback, delay = 500) {
+  const typing = document.createElement('div');
+  typing.className = 'typing-indicator';
+  typing.innerHTML = `
+    <div class="msg-avatar" style="background:var(--primary-100);color:var(--primary);">
+      <i class="fa-solid fa-bolt" style="font-size:11px;"></i>
+    </div>
+    <div class="typing-dots"><span></span><span></span><span></span></div>
+  `;
+  container.appendChild(typing);
+  scrollChat();
+  setTimeout(() => {
+    typing.remove();
+    callback();
+  }, delay);
+}
+
+function appendUserMsg(container, text) {
+  const el = document.createElement('div');
+  el.className = 'msg user';
+  el.innerHTML = `
+    <div class="msg-avatar">U</div>
+    <div class="msg-body">${text}</div>
+  `;
+  container.appendChild(el);
+}
+
+function appendAvaMsg(container, text) {
+  const el = document.createElement('div');
+  el.className = 'msg ava';
+  el.innerHTML = `
+    <div class="msg-avatar"><i class="fa-solid fa-bolt" style="font-size:11px;"></i></div>
+    <div class="msg-body">${text.replace(/\n/g, '<br>')}</div>
+  `;
+  container.appendChild(el);
+}
+
+function appendAvaHtml(container, html) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'msg ava';
+  wrapper.innerHTML = `
+    <div class="msg-avatar"><i class="fa-solid fa-bolt" style="font-size:11px;"></i></div>
+    <div class="msg-body" style="padding:0;border:none;background:transparent;">${html}</div>
+  `;
+  container.appendChild(wrapper);
+}
+
+function appendPlanCard(container, step) {
+  const el = document.createElement('div');
+  el.className = 'plan-card';
+  el.innerHTML = `
+    <div class="plan-card-header">
+      <div class="plan-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+      <h3>${step.title}</h3>
+      <span class="plan-status ${step.status}">${step.status === 'pending' ? 'Awaiting Approval' : 'Approved'}</span>
+    </div>
+    <div class="plan-card-body">
+      ${step.rows.map(r => `
+        <div class="plan-row">
+          <span class="label">${r.label}</span>
+          <span class="value">${r.value}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div class="plan-card-actions">
+      <button class="plan-btn reject"><i class="fa-solid fa-xmark"></i> Reject</button>
+      <button class="plan-btn edit"><i class="fa-solid fa-pen"></i> Edit</button>
+      <button class="plan-btn approve"><i class="fa-solid fa-check"></i> Approve</button>
+    </div>
+  `;
+  container.appendChild(el);
+}
+
+function appendOptionsCard(container, step) {
+  const el = document.createElement('div');
+  el.className = 'options-card';
+  el.innerHTML = `
+    <h4>${step.title}</h4>
+    ${step.items.map((item, i) => `
+      <div class="option-item" data-index="${i}">
+        <div class="option-letter">${item.letter}</div>
+        <div class="option-text">${item.text}</div>
+      </div>
+    `).join('')}
+  `;
+  el.querySelectorAll('.option-item').forEach((optEl, i) => {
+    optEl.addEventListener('click', () => {
+      if (el.classList.contains('disabled')) return;
+      el.querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
+      optEl.classList.add('selected');
+      el.classList.add('disabled');
+      setTimeout(() => {
+        const chat = document.getElementById('chatMessages');
+        appendUserMsg(chat, step.items[i].response);
+        scrollChat();
+        resumePlay();
+      }, 300);
+    });
+  });
+  container.appendChild(el);
+}
+
+function appendDisambigCard(container, step) {
+  const el = document.createElement('div');
+  el.className = 'disambig-card';
+  el.innerHTML = `
+    <h4><i class="fa-solid fa-circle-question"></i> ${step.title}</h4>
+    ${step.items.map((item, i) => `
+      <div class="disambig-item" data-index="${i}">
+        ${item.text}
+        <div class="item-meta">${item.meta}</div>
+      </div>
+    `).join('')}
+  `;
+  el.querySelectorAll('.disambig-item').forEach((itemEl, i) => {
+    itemEl.addEventListener('click', () => {
+      if (el.classList.contains('disabled')) return;
+      el.querySelectorAll('.disambig-item').forEach(d => d.classList.remove('selected'));
+      itemEl.classList.add('selected');
+      el.classList.add('disabled');
+      setTimeout(() => {
+        const chat = document.getElementById('chatMessages');
+        appendUserMsg(chat, step.items[i].response);
+        scrollChat();
+        resumePlay();
+      }, 300);
+    });
+  });
+  container.appendChild(el);
+}
+
+function appendStats(container, items) {
+  const el = document.createElement('div');
+  el.className = 'stats-row';
+  el.innerHTML = items.map(i => `
+    <div class="stat-card">
+      <div class="stat-val">${i.val}</div>
+      <div class="stat-label">${i.label}</div>
+    </div>
+  `).join('');
+  container.appendChild(el);
+}
+
+function appendDataTable(container, step) {
+  const el = document.createElement('div');
+  el.className = 'data-card';
+  el.innerHTML = `
+    <div class="data-card-header">
+      <i class="fa-solid ${step.icon}"></i>
+      <h4>${step.title}</h4>
+    </div>
+    <table class="data-table">
+      <thead><tr>${step.headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+      <tbody>${step.rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>
+  `;
+  container.appendChild(el);
+}
+
+// ═══════════════════════════════════════════════════
+//  THINKING INDICATOR
+// ═══════════════════════════════════════════════════
+function appendThinking(container, steps, callback) {
+  const block = document.createElement('div');
+  block.className = 'thinking-block';
+  block.innerHTML = `
+    <div class="thinking-header" onclick="this.parentElement.classList.toggle('collapsed')">
+      <div class="thinking-icon"><i class="fa-solid fa-bolt" style="font-size:10px;"></i></div>
+      <span class="thinking-label">Thinking</span>
+      <div class="thinking-dots"><span></span><span></span><span></span></div>
+      <i class="fa-solid fa-chevron-up thinking-chevron"></i>
+    </div>
+    <div class="thinking-steps"></div>
+  `;
+  container.appendChild(block);
+  scrollChat();
+
+  const stepsContainer = block.querySelector('.thinking-steps');
+  let i = 0;
+
+  function showNextStep() {
+    if (i >= steps.length) {
+      block.classList.add('done');
+      setTimeout(() => {
+        block.classList.add('collapsed');
+        if (callback) callback();
+      }, 400);
+      return;
+    }
+    const s = steps[i];
+    const stepEl = document.createElement('div');
+    stepEl.className = 'thinking-step active';
+    stepEl.innerHTML = `<i class="fa-regular ${s.icon}"></i> ${s.text}`;
+    stepsContainer.appendChild(stepEl);
+    scrollChat();
+    i++;
+    setTimeout(() => {
+      stepEl.classList.remove('active');
+      stepEl.classList.add('done');
+      showNextStep();
+    }, 500 + Math.random() * 400);
+  }
+
+  showNextStep();
+}
+
+function scrollChat() {
+  const el = document.getElementById('chatMessages');
+  setTimeout(() => { el.scrollTop = el.scrollHeight; }, 50);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Enter' && !e.shiftKey) {
+    const input = document.getElementById('chatInput');
+    if (document.activeElement === input && !input.disabled) {
+      e.preventDefault();
+      handleSend();
+    }
+  }
+});
+
+// INIT
+init();
+</script>
+</body>
+</html>
